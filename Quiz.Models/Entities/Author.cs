@@ -11,7 +11,6 @@ namespace Quiz.Models.Entities
 
         public string Name { get; set; }
 
-        //[JsonIgnore]
         [NotMapped]
         public List<Quote> Quotes { get; set; }
     }

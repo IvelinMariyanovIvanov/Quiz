@@ -46,7 +46,7 @@ namespace Quiz.Data.Repositories
                 }
             }
 
-            return await data.ToListAsync();
+            return await data.AsNoTracking().ToListAsync();
         }
 
         public IQueryable<T> GetAllWithLinqAsyncAsIQueryable
