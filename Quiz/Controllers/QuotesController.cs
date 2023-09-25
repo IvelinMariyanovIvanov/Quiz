@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quiz.Data.Repositories.Interfaces;
@@ -20,7 +19,7 @@ namespace Quiz.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllQuatesApi()
+        public async Task<IActionResult> GetAllQuotesAPI()
         {
             List<Quote> quotes = 
                 await _unitOfWork.QuoteRepository.GetAllAsync(includeTables: "Author");
@@ -90,10 +89,9 @@ namespace Quiz.Web.Controllers
             return View(viewModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditQuote(QuoteVM form)
+        public async Task<IActionResult> EditQuote(QuoteVM form)
         {
             if (!ModelState.IsValid)
                 return View(form);
@@ -119,24 +117,25 @@ namespace Quiz.Web.Controllers
             }
         }
 
-        public ActionResult Delete(int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteQuoteAPI(int? id)
         {
-            return View();
-        }
+            Quote quote = await _unitOfWork.QuoteRepository.GetByIdAsync(id);
 
+            if (quote == null)
+                return Json(new { success = false, message = "Not found" });
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult>  Delete(int id, IFormCollection collection)
-        {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _unitOfWork.QuoteRepository.Delete(quote);
+                await _unitOfWork.SaveAsync();
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return Json(new { success = false, message = $"Can not delete the quote with id {quote.Id}" });
             }
+
+            return Json(new { success = true, message = $"The quote with id {quote.Id} is deleted" });
         }
 
         /// <summary>
