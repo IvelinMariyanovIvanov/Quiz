@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Quiz.Data.Data;
 using Quiz.Data.Repositories.Interfaces;
 using Quiz.Data.Repositories;
 using Quiz.Models.Entities;
+using AutoMapper;
+using Quiz.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,11 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// config auto mapper
+IMapper autoMapper = MappingConfig.RegisterMaps().CreateMapper();
+builder.Services.AddSingleton(autoMapper);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services
     .AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -43,7 +49,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Quotes}/{action=Quotes}/{id?}");
 
 ApplyMigrationsAndSeedDb();
 

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Quiz.Models.Entities
 {
@@ -9,6 +11,8 @@ namespace Quiz.Models.Entities
 
         public string Name { get; set; }
 
+        //[JsonIgnore]
+        [NotMapped]
         public List<Quote> Quotes { get; set; }
     }
 }

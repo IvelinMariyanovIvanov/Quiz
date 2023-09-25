@@ -1,0 +1,31 @@
+﻿@model List<Quote>
+
+<div class="container justify-content-center col-md-12">
+    <div class="row mb-2">
+        <div class="col-6">
+            <h2 class="text-primary">Quotes</h2>
+        </div>
+
+        <div class="col-6 text-end">
+            <a asp-area="Admin" asp-controller="Quotes" asp-action="CreateQuote" 
+                class="btn btn-outline-primary">
+                <i class="bi bi-plus-circle me-2"></i>
+                New Quote
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped" width="100%" id="quotesTable">
+        <thead>
+            <tr>
+                <th class="col-8 text-center"><h4>Text</h4></th>
+                <th class="col-1 text-center"><h4>Author</h4></th>
+               @* <th class="col-2"></th>*@
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts{
+    <script src="~/js/quotes.js"></script>
+}

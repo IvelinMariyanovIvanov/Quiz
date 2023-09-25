@@ -1,0 +1,57 @@
+﻿
+@model CreateQuoteVM
+
+<div class="container col-md-8">
+    <div class="card shadow border-0 mt-4 justify-content-center">
+        <div class="card-header bg-primary bg-gradient ml-0 py-3">
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white text-center fw-bold">
+                        New Quote
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 justify-content-center">
+            <form method="post" asp-action="CreateQuote">
+                <div class="container justify-content-center">
+                    <div class="border p-4 mb-4 border-info">
+
+                        <div class="row form-floating shadow">
+                            <input asp-for="Text" class="form-control" />
+                            <label asp-for="Text" class="text-primary fw-bold"></label>
+                            <span asp-validation-for="Text" class="text-danger"></span>
+                        </div>
+
+                        <div class="row form-floating shadow mt-4 me-2">
+                            <select asp-for="AuthorId" asp-items="@Model.AuthorsDropDown"
+                                    class="form-select">
+                            </select>
+                            <label asp-for="AuthorId" class="text-primary fw-bold"></label>
+                            <span asp-validation-for="AuthorId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between">
+                                <a asp-controller="Quotes" asp-action="Quotes"
+                                    class="btn btn-secondary col-6 col-md-3">
+                                    Back
+                                </a>
+
+                                <button type="submit" class="btn btn-outline-primary col-6 col-md-3 fw-bold">
+                                    New Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
