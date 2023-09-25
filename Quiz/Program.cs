@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Quiz.Data.Data;
+using Quiz.Data.Repositories.Interfaces;
+using Quiz.Data.Repositories;
 using Quiz.Models.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,8 @@ builder.Services
     .AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<QuizDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
@@ -40,4 +45,19 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+ApplyMigrationsAndSeedDb();
+
 app.Run();
+
+void ApplyMigrationsAndSeedDb()
+{
+    using (IServiceScope scope = app.Services.CreateScope())
+    {
+        QuizDbContext db = scope.ServiceProvider.GetRequiredService<QuizDbContext>();
+
+        if (db.Database.GetPendingMigrations().Count() > 0)
+        {
+            db.Database.Migrate();
+        }
+    }
+}
