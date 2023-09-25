@@ -15,7 +15,7 @@ function createQuotesTable() {
             {
                 data: 'id',
                 render: function (data) {
-                    return `<div class="d-flex justify-content-around">
+                    return `<div class="d-flex justify-content-between">
                                     <a onClick=DeleteQuote('/Quotes/DeleteQuoteAPI?id=${data}')
                                         class="btn btn-outline-danger">
                                         <i class="bi bi-trash3"></i>
