@@ -69,13 +69,14 @@ namespace Quiz.Data.Repositories
             return data.AsNoTracking();
         }
 
-        public async Task<T?> GetEntityAsync(Expression<Func<T, bool>> linqExpression, string? includeProperties = null)
+        public async Task<T?> GetEntityAsync
+            (Expression<Func<T, bool>> linqExpression, string? includeTables = null)
         {
             IQueryable<T> data = _currentDbTable.Where(linqExpression);
 
-            if (includeProperties != null)
+            if (includeTables != null)
             {
-                foreach (string prop in includeProperties.
+                foreach (string prop in includeTables.
                     Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     data = data.Include(prop);
@@ -85,18 +86,9 @@ namespace Quiz.Data.Repositories
             return await data.FirstOrDefaultAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int? id, string? includeProperties = null)
+        public async Task<T?> GetByIdAsync(int? id)
         {
             DbSet<T> data = _currentDbTable;
-
-            if (includeProperties != null)
-            {
-                foreach (string prop in includeProperties.
-                    Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    data = (DbSet<T>)data.Include(prop);
-                }
-            }
 
             return await data.FindAsync(id);
         }

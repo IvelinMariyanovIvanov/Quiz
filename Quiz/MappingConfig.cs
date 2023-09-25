@@ -10,8 +10,8 @@ namespace Quiz.Web
         {
             var mapperConfiguration = new MapperConfiguration(mapper =>
             {
-                mapper.CreateMap<Quote, CreateQuoteVM>();
-                mapper.CreateMap<CreateQuoteVM, Quote>();
+                mapper.CreateMap<Quote, QuoteVM>();
+                mapper.CreateMap<QuoteVM, Quote>();
                  // .ForPath(dest => dest.Author.Id, opt => opt.MapFrom(src => src.AuthorId));
             });
 

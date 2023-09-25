@@ -28,23 +28,23 @@ namespace Quiz.Web.Controllers
             return Json(new { data = quotes });
         }
 
-        public async Task<IActionResult> Quotes()
+        public IActionResult Quotes()
         {
             return View();
         }
 
         public async Task<IActionResult> CreateQuote()
         {
-            CreateQuoteVM viewModel = new CreateQuoteVM();
+            QuoteVM viewModel = new QuoteVM();
 
-            await CreateQuoteViewModel(viewModel);
+            await SetAuthorsDropDown(viewModel);
 
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateQuote(CreateQuoteVM form)
+        public async Task<ActionResult> CreateQuote(QuoteVM form)
         {
             if (!ModelState.IsValid)
                 return View(form);
@@ -66,34 +66,56 @@ namespace Quiz.Web.Controllers
                 TempData["error"] = "Can not create the quote";
 
                 // populate authors dropdown
-                await CreateQuoteViewModel(form);
+                await SetAuthorsDropDown(form);
 
                 return View(form);
             }
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> EditQuote(int? id)
         {
-            return View();
-        }
+            if (id == null | id == 0)
+                return NotFound();
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            return View();
+            Quote quote = await _unitOfWork.QuoteRepository.GetEntityAsync
+                (i => i.Id == id, includeTables: "Author");
+
+            if (quote == null)
+                return NotFound();
+
+            // map entity to view model
+            QuoteVM viewModel = _mapper.Map<QuoteVM>(quote);
+            await SetAuthorsDropDown(viewModel);
+
+            return View(viewModel);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditQuote(QuoteVM form)
         {
+            if (!ModelState.IsValid)
+                return View(form);
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                // map from view model to entity
+                Quote entity = _mapper.Map<Quote>(form);
+
+                _unitOfWork.QuoteRepository.Update(entity);
+                await _unitOfWork.SaveAsync();
+
+                TempData["success"] = $"You Successfully updated the quote with id {form.Id}";
+
+                return RedirectToAction(nameof(Quotes));
             }
             catch
             {
-                return View();
+                TempData["error"] = $"Can not update the quote with id {form.Id}";
+                await SetAuthorsDropDown(form);
+
+                return View(form);
             }
         }
 
@@ -117,15 +139,21 @@ namespace Quiz.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Set Authors DropDown for QuoteVM
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [NonAction]
-        private async Task CreateQuoteViewModel(CreateQuoteVM viewModel)
+        private async Task SetAuthorsDropDown(QuoteVM viewModel)
         {
             List<Author> authors = await _unitOfWork.AuthorRepository.GetAllAsync();
 
             viewModel.AuthorsDropDown = authors
                 .Select(a => new SelectListItem { Text = a.Name, Value = a.Id.ToString() });
-            viewModel.AuthorsDropDown = viewModel.AuthorsDropDown.Prepend(new SelectListItem
-            { Text = "-- Select an Author -- ", Value = 0.ToString() });
+
+            viewModel.AuthorsDropDown = viewModel.AuthorsDropDown.Prepend
+                (new SelectListItem { Text = "-- Select an Author -- ", Value = 0.ToString() });
         }
     }
 }

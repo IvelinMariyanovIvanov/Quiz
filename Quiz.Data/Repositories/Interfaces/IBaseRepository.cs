@@ -13,7 +13,7 @@ namespace Quiz.Data.Repositories.Interfaces
         Task<T?> GetEntityAsync(Expression<Func<T, bool>> linqExpression, string? includeTables = null);
 
         // Get a single entity by PK
-        Task<T?> GetByIdAsync(int? id, string? includeTables = null);
+        Task<T?> GetByIdAsync(int? id);
 
         Task AddAsync(T entity);
 

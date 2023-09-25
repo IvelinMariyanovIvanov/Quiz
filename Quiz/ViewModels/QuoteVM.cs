@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Quiz.Web.ViewModels
 {
-    public class CreateQuoteVM
+    public class QuoteVM
     {
         public int Id { get; set; }
 
