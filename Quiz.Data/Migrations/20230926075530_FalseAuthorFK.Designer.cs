@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data.Data;
 
@@ -11,9 +12,11 @@ using Quiz.Data.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    partial class QuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926075530_FalseAuthorFK")]
+    partial class FalseAuthorFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,89 +234,6 @@ namespace Quiz.Data.Migrations
                     b.HasIndex("QuoteId");
 
                     b.ToTable("Questions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CorrectAuthorId = 1,
-                            FalseAuthor1Id = 2,
-                            FalseAuthor2Id = 3,
-                            QuestionType = 0,
-                            QuoteId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CorrectAuthorId = 1,
-                            FalseAuthor1Id = 3,
-                            FalseAuthor2Id = 4,
-                            QuestionType = 0,
-                            QuoteId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CorrectAuthorId = 1,
-                            FalseAuthor1Id = 4,
-                            FalseAuthor2Id = 5,
-                            QuestionType = 0,
-                            QuoteId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CorrectAuthorId = 2,
-                            FalseAuthor1Id = 5,
-                            FalseAuthor2Id = 5,
-                            QuestionType = 0,
-                            QuoteId = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CorrectAuthorId = 2,
-                            FalseAuthor1Id = 6,
-                            FalseAuthor2Id = 7,
-                            QuestionType = 0,
-                            QuoteId = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CorrectAuthorId = 2,
-                            FalseAuthor1Id = 7,
-                            FalseAuthor2Id = 8,
-                            QuestionType = 0,
-                            QuoteId = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CorrectAuthorId = 3,
-                            FalseAuthor1Id = 8,
-                            FalseAuthor2Id = 9,
-                            QuestionType = 0,
-                            QuoteId = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CorrectAuthorId = 3,
-                            FalseAuthor1Id = 1,
-                            FalseAuthor2Id = 2,
-                            QuestionType = 0,
-                            QuoteId = 8
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CorrectAuthorId = 3,
-                            FalseAuthor1Id = 2,
-                            FalseAuthor2Id = 3,
-                            QuestionType = 0,
-                            QuoteId = 9
-                        });
                 });
 
             modelBuilder.Entity("Quiz.Models.Entities.Quote", b =>

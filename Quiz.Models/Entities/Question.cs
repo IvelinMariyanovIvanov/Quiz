@@ -16,9 +16,19 @@ namespace Quiz.Models.Entities
         public Quote AskedQuote { get; set; }
         public int QuoteId { get; set; }
 
-        // navigation properties
-        public List<Author> PossibleAnswers { get; set; }
-        public Author CorrectAnswer { get; set; }
+        [ForeignKey(nameof(FalseAuthor1))]
+        public int FalseAuthor1Id { get; set; }
+        [NotMapped]
+        public Author FalseAuthor1 { get; set; }
 
+        [ForeignKey(nameof(FalseAuthor2))]
+        public int FalseAuthor2Id { get; set;}
+        [NotMapped]
+        public Author FalseAuthor2 { get; set; }
+
+        [ForeignKey(nameof(CorrectAuthorId))]
+        public int CorrectAuthorId { get; set; }
+        [NotMapped]
+        public Author CorrectAuthor { get; set; }
     }
 }
