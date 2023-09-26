@@ -12,6 +12,7 @@ namespace Quiz.Data.Repositories
         public IQuestionRepository QuestionRepository { get;private set; }
         public IAnswerRepository AnswerRepository { get; private set; }
         public IAnswerUserRepository AnswerUserRepository { get;private set; }
+        public IUserRepository UserRepository { get; private set; }
 
         public UnitOfWork(QuizDbContext quizDbContext)
         {
@@ -21,6 +22,7 @@ namespace Quiz.Data.Repositories
             QuestionRepository = new QuestionRepository(quizDbContext);
             AnswerRepository = new AnswerRepository(quizDbContext);
             AnswerUserRepository = new AnswerUserRepository(quizDbContext);
+            UserRepository = new UserRepository(quizDbContext);
         }
 
         public async Task SaveAsync()

@@ -26,6 +26,7 @@ namespace Quiz.Data.Data
             base.OnModelCreating(builder);
 
             builder.Entity<UserAnswers>().HasKey(au => new { au.AnswerId, au.UserId});
+
             builder.Entity<UserAnswers>().
                 HasOne(au => au.Answer).
                 WithMany(u => u.AnswerUsers).

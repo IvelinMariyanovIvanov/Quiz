@@ -1,0 +1,55 @@
+﻿@model LogInUserVM;
+
+@{
+    ViewData["Title"] = "Log in to your account";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <div class="bg-primary">
+                    <h2 class="text-center text-white">
+                        Log in
+                    </h2>
+                </div>
+
+                @if (Model.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger">
+                        <span>
+                            <b><h4>@Model.ErrorMessage</h4></b>
+                        </span>
+                    </div>
+                }
+
+                <form asp-action="Login">
+                    <div class="border p-4 mb-4 border-info">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <a class="btn btn-outline-secondary col-5" asp-controller="Users" asp-action="Questions">
+                                Cancel
+                            </a>
+
+                            <input class="btn btn-outline-info col-5 float-end" type="submit" value="Log in" />
+                        </div>
+                    </div>                    
+                </form>
+                </>
+            </div>
+        </div>
+    </div>
+</div>

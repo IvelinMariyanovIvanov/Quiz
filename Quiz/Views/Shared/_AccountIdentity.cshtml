@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Quiz.Helpers;
+@inject UserManager<User> userManager;
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div>
+        <!-- Register -->
+        <a class="btn btn-info" asp-controller="Accounts" asp-action="Register" style="margin-right:20px">
+            Sign Up
+            <i class="bi bi-person-plus"></i>
+        </a>
+
+        <!-- LOG IN -->
+        <a class="btn btn-outline-info" asp-controller="Accounts" asp-action="Login" style="margin-right:20px">
+            Log in
+            <i class="bi bi-box-arrow-in-right"></i>
+        </a>
+    </div>
+}
+else
+{
+    <!-- User profile section -->
+    <div class="dropdown" Authentication style="margin-right:20px">
+        <button class="btn btn-outline-info dropdown-toggle" type="button"
+                id="profile-btn" data-bs-toggle="dropdown" aria-haspopup="true">
+            <i class="bi bi-person-badge"></i> 
+            Hello @userManager.GetUserName(User)
+        </button>
+
+        @if (User.IsInRole(Constants.AdminRole))
+        {
+            <ul class="dropdown-menu" aria-labelledby="profile-btn">
+                <li>
+                    <a class="dropdown-item" asp-controller="Accounts" asp-action="Users">
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                </li>
+            </ul>
+        }
+    </div>
+
+    <!-- Log Out -->
+    <form asp-action="LogOut" asp-controller="Accounts" style="margin-right:20px">
+        <button type="submit" value="Log out" class="btn btn-outline-danger">
+            Log out
+            <i class="bi bi-box-arrow-in-right"></i>
+        </button>
+    </form>
+}
+

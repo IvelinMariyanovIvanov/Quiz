@@ -6,6 +6,8 @@ using Quiz.Data.Repositories;
 using Quiz.Models.Entities;
 using AutoMapper;
 using Quiz.Web;
+using Microsoft.AspNetCore.Builder;
+using Quiz.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,8 @@ app.MapControllerRoute(
 
 ApplyMigrationsAndSeedDb();
 
+await SeedUsersAndRolesAsync();
+
 app.Run();
 
 void ApplyMigrationsAndSeedDb()
@@ -67,6 +71,61 @@ void ApplyMigrationsAndSeedDb()
         if (db.Database.GetPendingMigrations().Count() > 0)
         {
             db.Database.Migrate();
+        }
+    }
+}
+
+async Task SeedUsersAndRolesAsync()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        // Roles
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // Add Admin
+        if (!await roleManager.RoleExistsAsync(Constants.AdminRole))
+                await roleManager.CreateAsync(new IdentityRole(Constants.AdminRole));
+
+        // Add user
+        if (!await roleManager.RoleExistsAsync(Constants.UserRole))
+                await roleManager.CreateAsync(new IdentityRole(Constants.UserRole));
+
+        //Users
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        string adminUserEmail = "admin@test.com";
+
+        var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+
+        if (adminUser == null)
+        {
+            var newAdminUser = new User()
+            {
+                FullName = "Admin 1",
+                UserName = adminUserEmail,
+                Email = adminUserEmail,
+                EmailConfirmed = true
+            };
+
+            await userManager.CreateAsync(newAdminUser, Constants.AdminPassword);
+            await userManager.AddToRoleAsync(newAdminUser, Constants.AdminRole);
+        }
+
+
+        string appUserEmail = "user@test.com";
+        var appUser = await userManager.FindByEmailAsync(appUserEmail);
+
+        if (appUser == null)
+        {
+            var newAppUser = new User()
+            {
+                FullName = "User 1",
+                UserName = appUserEmail,
+                Email = appUserEmail,
+                EmailConfirmed = true
+            };
+
+            await userManager.CreateAsync(newAppUser, Constants.UserPassword);
+            await userManager.AddToRoleAsync(newAppUser, Constants.UserRole);
         }
     }
 }

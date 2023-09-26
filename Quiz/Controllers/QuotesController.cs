@@ -23,7 +23,7 @@ namespace Quiz.Web.Controllers
         {
             List<Quote> quotes = 
                 await _unitOfWork.QuoteRepository.GetAllAsync(includeTables: "Author");
-
+           
             return Json(new { data = quotes });
         }
 

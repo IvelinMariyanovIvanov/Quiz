@@ -3,6 +3,12 @@ namespace Quiz.Helpers
 {
     public class Constants
     {
+        public const string AdminRole = "Admin";
+        public const string UserRole = "User";
+
+        public const string AdminPassword = "Admin123$";
+        public const string UserPassword = "User123$";
+
         public enum QuestionType
         {
             /// <summary>
