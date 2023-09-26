@@ -109,7 +109,7 @@ namespace Quiz.Web.Controllers
                 // navigate to Log In
                 return View("CompleteRegister");
             }
-            // The Password is WEAK
+            // The Password is WEAK or taken
             else
             {
                 List<IdentityError> errors = isUserCreated.Errors.ToList();

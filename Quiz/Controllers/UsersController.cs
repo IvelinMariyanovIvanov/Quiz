@@ -7,6 +7,7 @@ using Quiz.Data.Repositories.Interfaces;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
 using System.Security.Claims;
+using UserAnswers = Quiz.Models.Entities.UserAnswers;
 
 namespace Quiz.Web.Controllers
 {
@@ -50,11 +51,13 @@ namespace Quiz.Web.Controllers
 
             // set if CorrectAuthorId = FalseAuthor1Id
             Random rnd = new Random();
-            viewModel.RandomAuthorId = rnd.Next(question.CorrectAuthorId, question.FalseAuthor1Id + 1);
-            Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
+            viewModel.RandomAuthorId = rnd.Next(question.CorrectAuthorId, ++question.FalseAuthor1Id);
+            Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(viewModel.RandomAuthorId);
 
             if (randomAuthor == null)
                 randomAuthor = question.CorrectAuthor;
+            else
+                viewModel.RandomAuthor = randomAuthor;
 
             return View(viewModel);
         }
@@ -65,6 +68,13 @@ namespace Quiz.Web.Controllers
             if (!ModelState.IsValid)
                 return View(form);
 
+            string userId = User.Identity.GetUserId();
+
+            if(userId == null)
+            {
+                TempData["error"] = "Please Log In";
+                return View(form);
+            }
 
             try
             {
@@ -75,44 +85,75 @@ namespace Quiz.Web.Controllers
                     AnswerId = form.CorrectAuthorId
                 };
 
-                if (submit == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
-                {
-                    Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
-
-                    answer.IsCorrect = true;
-                    answer.AnswerText = author.Name;
-                    answer.AnswerId = form.CorrectAuthor.Id;
-                }
-                else if(submit == "no" && form.RandomAuthorId == form.CorrectAuthorId)
-                {
-                    Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
-
-                    answer.IsCorrect = false;
-                    answer.AnswerText = author.Name;
-                    answer.AnswerId = form.RandomAuthorId;
-                }
+                await SetAnswer(form, submit, answer);
 
                 await _unitOfWork.AnswerRepository.AddAsync(answer);
+                await _unitOfWork.SaveAsync();
 
-
-                Models.Entities.UserAnswers answerUser = new Models.Entities.UserAnswers()
+                UserAnswers answerUser = new UserAnswers()
                 {
                     AnswerId = answer.Id,
-                    UserId = User.Identity.GetUserId()
+                    UserId = userId
                 };
 
                 await _unitOfWork.AnswerUserRepository.AddAsync(answerUser);
                 await _unitOfWork.SaveAsync();
 
-                TempData["success"] = "You Successfully created a quote";
+                // get author option value
+                form.RandomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
 
-                return RedirectToAction(nameof(Questions));
+                return View(form);
             }
             catch
             {
-                TempData["error"] = "Can not create the quote";
+                TempData["error"] = "Can not answer the question";
 
                 return View(form);
+            }
+        }
+
+        [NonAction]
+        private async Task SetAnswer(QuestionVM form, string submit, Answer answer)
+        {
+            if (submit == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
+            {
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+
+                answer.IsCorrect = true;
+                answer.AnswerText = author.Name;
+                answer.AnswerId = form.CorrectAuthorId;
+
+                TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
+            }
+            else if (submit == "yes" && form.RandomAuthorId != form.CorrectAuthorId)
+            {
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+
+                answer.IsCorrect = false;
+                answer.AnswerText = author.Name;
+                answer.AnswerId = form.RandomAuthorId;
+
+                TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
+            }
+            else if (submit == "no" && form.RandomAuthorId != form.CorrectAuthorId)
+            {
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+
+                answer.IsCorrect = true;
+                answer.AnswerText = author.Name;
+                answer.AnswerId = form.CorrectAuthorId;
+
+                TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
+            }
+            else if (submit == "no" && form.RandomAuthorId == form.CorrectAuthorId)
+            {
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
+
+                answer.IsCorrect = false;
+                answer.AnswerText = author.Name;
+                answer.AnswerId = form.RandomAuthorId;
+
+                TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
             }
         }
     }

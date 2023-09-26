@@ -9,7 +9,7 @@ namespace Quiz.Web.ViewModels
         public int Id { get; set; }
 
         public int RandomAuthorId { get; set; }
-        public Author RandomAuthor { get; set; }
+        public Author RandomAuthor { get; set; } = new Author();
 
         public QuestionType QuestionType { get; set; }
 
