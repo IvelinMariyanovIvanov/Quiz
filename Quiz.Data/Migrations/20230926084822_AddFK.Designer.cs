@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data.Data;
 
@@ -11,9 +12,11 @@ using Quiz.Data.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    partial class QuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926084822_AddFK")]
+    partial class AddFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,14 +231,6 @@ namespace Quiz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CorrectAuthorId");
-
-                    b.HasIndex("FalseAuthor1Id");
-
-                    b.HasIndex("FalseAuthor2Id");
-
-                    b.HasIndex("QuoteId");
-
                     b.ToTable("Questions");
 
                     b.HasData(
@@ -271,7 +266,7 @@ namespace Quiz.Data.Migrations
                             Id = 4,
                             CorrectAuthorId = 2,
                             FalseAuthor1Id = 5,
-                            FalseAuthor2Id = 6,
+                            FalseAuthor2Id = 5,
                             QuestionType = 0,
                             QuoteId = 4
                         },
@@ -280,7 +275,7 @@ namespace Quiz.Data.Migrations
                             Id = 5,
                             CorrectAuthorId = 2,
                             FalseAuthor1Id = 6,
-                            FalseAuthor2Id = 6,
+                            FalseAuthor2Id = 7,
                             QuestionType = 0,
                             QuoteId = 5
                         },
@@ -288,8 +283,8 @@ namespace Quiz.Data.Migrations
                         {
                             Id = 6,
                             CorrectAuthorId = 2,
-                            FalseAuthor1Id = 5,
-                            FalseAuthor2Id = 4,
+                            FalseAuthor1Id = 7,
+                            FalseAuthor2Id = 8,
                             QuestionType = 0,
                             QuoteId = 6
                         },
@@ -297,8 +292,8 @@ namespace Quiz.Data.Migrations
                         {
                             Id = 7,
                             CorrectAuthorId = 3,
-                            FalseAuthor1Id = 4,
-                            FalseAuthor2Id = 3,
+                            FalseAuthor1Id = 8,
+                            FalseAuthor2Id = 9,
                             QuestionType = 0,
                             QuoteId = 7
                         },
@@ -306,8 +301,8 @@ namespace Quiz.Data.Migrations
                         {
                             Id = 8,
                             CorrectAuthorId = 3,
-                            FalseAuthor1Id = 2,
-                            FalseAuthor2Id = 1,
+                            FalseAuthor1Id = 1,
+                            FalseAuthor2Id = 2,
                             QuestionType = 0,
                             QuoteId = 8
                         },
@@ -315,8 +310,8 @@ namespace Quiz.Data.Migrations
                         {
                             Id = 9,
                             CorrectAuthorId = 3,
-                            FalseAuthor1Id = 1,
-                            FalseAuthor2Id = 2,
+                            FalseAuthor1Id = 2,
+                            FalseAuthor2Id = 3,
                             QuestionType = 0,
                             QuoteId = 9
                         });
@@ -338,8 +333,6 @@ namespace Quiz.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Quotes");
 
@@ -518,52 +511,6 @@ namespace Quiz.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Quiz.Models.Entities.Question", b =>
-                {
-                    b.HasOne("Quiz.Models.Entities.Author", "CorrectAuthor")
-                        .WithMany()
-                        .HasForeignKey("CorrectAuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quiz.Models.Entities.Author", "FalseAuthor1")
-                        .WithMany()
-                        .HasForeignKey("FalseAuthor1Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quiz.Models.Entities.Author", "FalseAuthor2")
-                        .WithMany()
-                        .HasForeignKey("FalseAuthor2Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quiz.Models.Entities.Quote", "AskedQuote")
-                        .WithMany()
-                        .HasForeignKey("QuoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AskedQuote");
-
-                    b.Navigation("CorrectAuthor");
-
-                    b.Navigation("FalseAuthor1");
-
-                    b.Navigation("FalseAuthor2");
-                });
-
-            modelBuilder.Entity("Quiz.Models.Entities.Quote", b =>
-                {
-                    b.HasOne("Quiz.Models.Entities.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
                 });
 #pragma warning restore 612, 618
         }

@@ -36,16 +36,33 @@ namespace Quiz.Web.Controllers
             if (id == null | id == 0)
                 return NotFound();
 
-            Quote quote = await _unitOfWork.QuoteRepository
-                .GetEntityAsync(q => q.Id == id, includeTables:"Author");
+            Question question = await _unitOfWork.QuestionRepository.GetEntityAsync
+                (q => q.Id == id, includeTables: "FalseAuthor1,FalseAuthor2,CorrectAuthor,AskedQuote");
 
-            if (quote == null)
+            if (question == null)
                 return NotFound();
 
             // map entity to view model
-            QuoteVM viewModel = _mapper.Map<QuoteVM>(quote);
+            QuoteVM viewModel = _mapper.Map<QuoteVM>(question);
 
             return View(viewModel);
         }
+
+        //public async Task<IActionResult> AnswerQuote(int? id)
+        //{
+        //    if (id == null | id == 0)
+        //        return NotFound();
+
+        //    Quote quote = await _unitOfWork.QuoteRepository
+        //        .GetEntityAsync(q => q.Id == id, includeTables:"Author");
+
+        //    if (quote == null)
+        //        return NotFound();
+
+        //    // map entity to view model
+        //    QuoteVM viewModel = _mapper.Map<QuoteVM>(quote);
+
+        //    return View(viewModel);
+        //}
     }
 }
