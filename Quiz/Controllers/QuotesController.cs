@@ -77,7 +77,7 @@ namespace Quiz.Web.Controllers
                 return NotFound();
 
             Quote quote = await _unitOfWork.QuoteRepository.GetEntityAsync
-                (i => i.Id == id, includeTables: "Author");
+                (i => i.Id == id, includeProperties: "Author");
 
             if (quote == null)
                 return NotFound();

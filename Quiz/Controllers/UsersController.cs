@@ -38,7 +38,7 @@ namespace Quiz.Web.Controllers
                 return NotFound();
 
             Question question = await _unitOfWork.QuestionRepository.GetEntityAsync
-                (q => q.Id == id, includeTables: "FalseAuthor1,FalseAuthor2,CorrectAuthor,AskedQuote");
+                (q => q.Id == id, includeProperties: "FalseAuthor1,FalseAuthor2,CorrectAuthor,AskedQuote");
 
             if (question == null)
                 return NotFound();
@@ -62,7 +62,7 @@ namespace Quiz.Web.Controllers
             if (!ModelState.IsValid)
                 return View(form);
 
-            return View(form);
+
 
             try
             {

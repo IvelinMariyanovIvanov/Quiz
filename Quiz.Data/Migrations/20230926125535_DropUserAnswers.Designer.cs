@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data.Data;
 
@@ -11,9 +12,11 @@ using Quiz.Data.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    partial class QuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926125535_DropUserAnswers")]
+    partial class DropUserAnswers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("AnswerUser", (string)null);
+                    b.ToTable("AnswerUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -201,7 +204,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuoteId");
 
-                    b.ToTable("Answers", (string)null);
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("Quiz.Models.Entities.Author", b =>
@@ -217,7 +220,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
 
                     b.HasData(
                         new
@@ -285,7 +288,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuoteId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
 
                     b.HasData(
                         new
@@ -390,7 +393,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Quotes", (string)null);
+                    b.ToTable("Quotes");
 
                     b.HasData(
                         new

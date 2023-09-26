@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data.Data;
 
@@ -11,9 +12,11 @@ using Quiz.Data.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    partial class QuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926120021_UserAnswers")]
+    partial class UserAnswers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace Quiz.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AnswerUser", b =>
-                {
-                    b.Property<int>("AnswersId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("AnswersId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("AnswerUser", (string)null);
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -201,7 +189,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuoteId");
 
-                    b.ToTable("Answers", (string)null);
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("Quiz.Models.Entities.Author", b =>
@@ -217,7 +205,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
 
                     b.HasData(
                         new
@@ -285,7 +273,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuoteId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
 
                     b.HasData(
                         new
@@ -390,7 +378,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Quotes", (string)null);
+                    b.ToTable("Quotes");
 
                     b.HasData(
                         new
@@ -518,19 +506,27 @@ namespace Quiz.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AnswerUser", b =>
+            modelBuilder.Entity("Quiz.Models.Entities.UserAnswers", b =>
                 {
-                    b.HasOne("Quiz.Models.Entities.Answer", null)
-                        .WithMany()
-                        .HasForeignKey("AnswersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasOne("Quiz.Models.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAnswers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -655,6 +651,23 @@ namespace Quiz.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Quiz.Models.Entities.UserAnswers", b =>
+                {
+                    b.HasOne("Quiz.Models.Entities.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Quiz.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
