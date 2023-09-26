@@ -7,7 +7,7 @@ $(document).ready(function () {
 function createQuotesTable() {
     dataTable = $('#usersQuotesTable').DataTable({
         ajax: {
-            url: '/Users/GetAllQuotesAPI'
+            url: '/Users/GetAllQuestionsAPI'
         },
         columns: [
             { data: 'id' },

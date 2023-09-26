@@ -18,7 +18,7 @@ namespace Quiz.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllQuotesAPI()
+        public async Task<IActionResult> GetAllQuestionsAPI()
         {
             List<Quote> quotes =
                 await _unitOfWork.QuoteRepository.GetAllAsync();
@@ -26,7 +26,7 @@ namespace Quiz.Web.Controllers
             return Json(new { data = quotes.OrderBy(i => i.Id) });
         }
 
-        public IActionResult Quotes()
+        public IActionResult Questions()
         {
             return View();
         }
@@ -42,7 +42,7 @@ namespace Quiz.Web.Controllers
             if (question == null)
                 return NotFound();
 
-            return View("AnswerQuestion", question);
+            return View(question);
         }
     }
 }
