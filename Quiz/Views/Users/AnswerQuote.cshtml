@@ -1,0 +1,49 @@
+﻿@model QuoteVM
+
+<div class="container col-md-6">
+    <div class="card shadow border-0 mt-4 justify-content-center">
+        <div class="card-header bg-primary bg-gradient ml-0">
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white text-center fw-bold">
+                        Answer Quote
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body justify-content-center">
+            <form method="post">
+                <h4> Who said it ?</h4>
+
+                <div class="container justify-content-center">
+                    <div class="mb-4">
+                        <div class="row form-floating shadow">
+                            <textarea rows="4" asp-for="Text" 
+                                      class="form-control" readonly style="background-color:deeppink">
+                            </textarea>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between">
+                                <a asp-controller="Users" asp-action="Quotes"
+                                   class="btn btn-secondary col-6 col-md-3">
+                                    Back
+                                </a>
+
+                                <button type="submit" class="btn btn-outline-primary col-6 col-md-3 fw-bold">
+                                    Answer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
