@@ -31,7 +31,7 @@ namespace Quiz.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> AnswerQuote(int? id)
+        public async Task<IActionResult> AnswerQuestion(int? id)
         {
             if (id == null | id == 0)
                 return NotFound();
@@ -42,27 +42,7 @@ namespace Quiz.Web.Controllers
             if (question == null)
                 return NotFound();
 
-            // map entity to view model
-            QuoteVM viewModel = _mapper.Map<QuoteVM>(question);
-
-            return View(viewModel);
+            return View("AnswerQuestion", question);
         }
-
-        //public async Task<IActionResult> AnswerQuote(int? id)
-        //{
-        //    if (id == null | id == 0)
-        //        return NotFound();
-
-        //    Quote quote = await _unitOfWork.QuoteRepository
-        //        .GetEntityAsync(q => q.Id == id, includeTables:"Author");
-
-        //    if (quote == null)
-        //        return NotFound();
-
-        //    // map entity to view model
-        //    QuoteVM viewModel = _mapper.Map<QuoteVM>(quote);
-
-        //    return View(viewModel);
-        //}
     }
 }
