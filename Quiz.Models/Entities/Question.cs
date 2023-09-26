@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static Quiz.Helpers.Constants;
 
 namespace Quiz.Models.Entities
@@ -11,18 +12,13 @@ namespace Quiz.Models.Entities
 
         public  QuestionType QuestionType { get;set; }
 
+        [ForeignKey(nameof(QuoteId))]
         public Quote AskedQuote { get; set; }
+        public int QuoteId { get; set; }
 
         // navigation properties
-        public List<Quote> Quotes { get; set; }
-        public Quote CorrectQuote { get; set; }
+        public List<Author> PossibleAnswers { get; set; }
+        public Author CorrectAnswer { get; set; }
 
-        //[Required]
-        //[MinLength(5)]
-        //public string Title { get; set; }
-
-        //[Required]
-        //[MinLength(10)]
-        //public string Body { get; set; }
     }
 }

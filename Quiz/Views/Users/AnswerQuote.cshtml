@@ -3,34 +3,15 @@
 <div class="container col-md-6">
     <div class="card shadow border-0 mt-4 justify-content-center">
        
-       @* <div class="card-header row">     
-        </div>*@
-
         <ul class="nav nav-tabs">
-            <li class="nav-item col-6 bg-secondary">
+            <li class="nav-item col-6 bg-secondary" id="YesOrNo">
                 <a class="nav-link active" aria-current="page" href="#">Active</a>
             </li>
 
-            <li class="nav-item col-6 bg-secondary">
+            <li class="nav-item col-6 bg-secondary" id="Multiple">
                 <a class="nav-link" href="#">Link</a>
             </li>
         </ul>
-
-       @* <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <button type="button" class="btn btn-secondary  col-6">
-                        1
-                    </button>
-
-                    <button type="button" class="btn btn-secondary col-6">
-                        2
-                    </button>
-                </div>               
-            </div>
-        </div>*@
-
- 
 
         <div class="card-body justify-content-center">
             <form method="post">
@@ -45,17 +26,29 @@
                         </div>
 
                         <div class="mt-4">
-                            <div class="d-flex justify-content-between">
-                                <a asp-controller="Users" asp-action="Quotes"
-                                   class="btn btn-secondary col-6 col-md-3">
-                                    Back
-                                </a>
+                            <div class="mt-2 text-center">
+                                <p>@Model.Author.Name ?</p>
+                            </div>
 
-                                <button type="submit" class="btn btn-outline-primary col-6 col-md-3 fw-bold">
+                            <!-- YesNoButtons -->
+                            <div id="YesNoButtons">
+                                <div class="d-flex justify-content-between">
+                                    <a asp-controller="" asp-action=""
+                                       class="btn btn-secondary col-6 col-md-3" style="background-color:limegreen">
+                                        Yes
+                                    </a>
+
+                                    <a asp-controller="" asp-action=""
+                                       class="btn btn-secondary col-6 col-md-3" style="background-color:crimson">
+                                        No
+                                    </a>
+                                    @*<button type="submit" class="btn btn-outline-primary col-6 col-md-3 fw-bold">
                                     Answer
-                                </button>
+                                    </button>*@
+                                </div>
                             </div>
                         </div>
+                       
                     </div>
                 </div>
             </form>
