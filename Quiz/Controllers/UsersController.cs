@@ -23,7 +23,7 @@ namespace Quiz.Web.Controllers
             List<Quote> quotes =
                 await _unitOfWork.QuoteRepository.GetAllAsync();
 
-            return Json(new { data = quotes });
+            return Json(new { data = quotes.OrderBy(i => i.Id) });
         }
 
         public IActionResult Quotes()

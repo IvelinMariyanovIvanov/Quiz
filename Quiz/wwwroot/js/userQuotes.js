@@ -10,6 +10,7 @@ function createQuotesTable() {
             url: '/Users/GetAllQuotesAPI'
         },
         columns: [
+            { data: 'id' },
             { data: 'text' },
             {
                 data: 'id',
