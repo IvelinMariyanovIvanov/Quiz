@@ -59,6 +59,10 @@ namespace Quiz.Web.Controllers
             else
                 viewModel.RandomAuthor = randomAuthor;
 
+            viewModel.MultipleOptionAuthorList.Add(randomAuthor);
+            viewModel.MultipleOptionAuthorList.Add(viewModel.FalseAuthor1);
+            viewModel.MultipleOptionAuthorList.Add(viewModel.FalseAuthor2);
+
             return View(viewModel);
         }
 

@@ -8,6 +8,7 @@ namespace Quiz.Models.Entities
         [Key]
         public int Id { get; set; }
 
+        [Required]
         public string AnswerText { get; set; } // Athor Name
 
         public bool IsCorrect { get; set; }
