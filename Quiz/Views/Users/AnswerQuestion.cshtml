@@ -1,4 +1,4 @@
-﻿@model Question
+﻿@model QuestionVM
 
 <div class="container col-md-6">
     <div class="card shadow border-0 mt-4 justify-content-center">
@@ -15,6 +15,10 @@
 
         <div class="card-body justify-content-center">
             <form method="post">
+                <input asp-for="FalseAuthor1" hidden/>
+                <input asp-for="FalseAuthor1" hidden />
+                <input asp-for="CorrectAuthorId" hidden />
+
                 <h4> Who said it ?</h4>
 
                 <div class="container justify-content-center">
@@ -33,18 +37,17 @@
                             <!-- YesNoButtons -->
                             <div id="YesNoButtons">
                                 <div class="d-flex justify-content-between">
-                                    <a asp-controller="" asp-action=""
-                                       class="btn btn-secondary col-6 col-md-3" style="background-color:limegreen">
+                                    <button name="submit" type="submit" 
+                                            class="btn btn-outline-primary col-6 col-md-3 fw-bold"
+                                            style="background-color:limegreen" value="yes">
                                         Yes
-                                    </a>
+                                    </button>
 
-                                    <a asp-controller="" asp-action=""
-                                       class="btn btn-secondary col-6 col-md-3" style="background-color:crimson">
+                                    <button name="submit" type="submit" 
+                                            class="btn btn-outline-primary col-6 col-md-3 fw-bold"
+                                            style="background-color:crimson" value="no">
                                         No
-                                    </a>
-                                    @*<button type="submit" class="btn btn-outline-primary col-6 col-md-3 fw-bold">
-                                    Answer
-                                    </button>*@
+                                    </button>
                                 </div>
                             </div>
                         </div>

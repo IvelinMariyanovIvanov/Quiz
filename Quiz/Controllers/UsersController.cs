@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Quiz.Data.Migrations;
 using Quiz.Data.Repositories.Interfaces;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
@@ -42,7 +43,42 @@ namespace Quiz.Web.Controllers
             if (question == null)
                 return NotFound();
 
-            return View(question);
+            QuestionVM viewModel = _mapper.Map<QuestionVM>(question);
+
+            // set if CorrectAuthorId = FalseAuthor1Id
+            Random rnd = new Random();
+            viewModel.RandomAuthorId = rnd.Next(question.CorrectAuthorId, question.FalseAuthor1Id + 1);
+            Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
+
+            if (randomAuthor == null)
+                randomAuthor = question.CorrectAuthor;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AnswerQuestion(QuestionVM form, string submit)
+        {
+            if (!ModelState.IsValid)
+                return View(form);
+
+            return View(form);
+
+            try
+            {
+                //await _unitOfWork.QuestionRepository.AddAsync(form);
+                //await _unitOfWork.SaveAsync();
+
+                TempData["success"] = "You Successfully created a quote";
+
+                return RedirectToAction(nameof(Questions));
+            }
+            catch
+            {
+                TempData["error"] = "Can not create the quote";
+
+                return View(form);
+            }
         }
     }
 }

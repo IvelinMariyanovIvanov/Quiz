@@ -12,7 +12,8 @@ namespace Quiz.Web
             {
                 mapper.CreateMap<Quote, QuoteVM>();
                 mapper.CreateMap<QuoteVM, Quote>();
-                 // .ForPath(dest => dest.Author.Id, opt => opt.MapFrom(src => src.AuthorId));
+                mapper.CreateMap<Question, QuestionVM>();
+                mapper.CreateMap<QuestionVM, Question>();
             });
 
             return mapperConfiguration;
