@@ -1,20 +1,23 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Quiz.Data.Migrations;
 using Quiz.Data.Repositories.Interfaces;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
+using System.Security.Claims;
 
 namespace Quiz.Web.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;      
         private IMapper _mapper;
 
         public UsersController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;          
             _mapper = mapper;
         }
 
@@ -63,11 +66,43 @@ namespace Quiz.Web.Controllers
                 return View(form);
 
 
-
             try
             {
-                //await _unitOfWork.QuestionRepository.AddAsync(form);
-                //await _unitOfWork.SaveAsync();
+                Answer answer = new Answer()
+                {
+                    QuestionId = form.Id,
+                    QuoteId = form.QuoteId,
+                    AnswerId = form.CorrectAuthorId
+                };
+
+                if (submit == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
+                {
+                    Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+
+                    answer.IsCorrect = true;
+                    answer.AnswerText = author.Name;
+                    answer.AnswerId = form.CorrectAuthor.Id;
+                }
+                else if(submit == "no" && form.RandomAuthorId == form.CorrectAuthorId)
+                {
+                    Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
+
+                    answer.IsCorrect = false;
+                    answer.AnswerText = author.Name;
+                    answer.AnswerId = form.RandomAuthorId;
+                }
+
+                await _unitOfWork.AnswerRepository.AddAsync(answer);
+
+
+                Models.Entities.UserAnswers answerUser = new Models.Entities.UserAnswers()
+                {
+                    AnswerId = answer.Id,
+                    UserId = User.Identity.GetUserId()
+                };
+
+                await _unitOfWork.AnswerUserRepository.AddAsync(answerUser);
+                await _unitOfWork.SaveAsync();
 
                 TempData["success"] = "You Successfully created a quote";
 

@@ -6,6 +6,8 @@ namespace Quiz.Data.Repositories.Interfaces
         IAuthorRepository AuthorRepository { get; }
         IQuoteRepository QuoteRepository { get; }
         IQuestionRepository QuestionRepository { get; }
+        IAnswerRepository AnswerRepository { get;}
+        IAnswerUserRepository AnswerUserRepository { get; }
 
         Task SaveAsync();
     }

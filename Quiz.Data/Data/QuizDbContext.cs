@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Quiz.Data.Migrations;
 using Quiz.Models.Entities;
+using UserAnswers = Quiz.Models.Entities.UserAnswers;
 
 namespace Quiz.Data.Data
 {
@@ -19,22 +18,22 @@ namespace Quiz.Data.Data
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Answer> Answers { get; set; }
-       // public DbSet<UserAnswers> UserAnswers { get; set; }
+        public DbSet<UserAnswers> UserAnswers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            //builder.Entity<User>()
-            //   .HasMany<Answer>(s => s.Answers)
-            //   .WithMany(c => c.Users)
-            //   .Map(cs =>
-            //   {
-            //       cs.MapLeftKey("UserId");
-            //       cs.MapRightKey("AnswerId");
-            //       cs.ToTable("UserAnswers");
-            //   });
+            builder.Entity<UserAnswers>().HasKey(au => new { au.AnswerId, au.UserId});
+            builder.Entity<UserAnswers>().
+                HasOne(au => au.Answer).
+                WithMany(u => u.AnswerUsers).
+                HasForeignKey(au => au.AnswerId);
+            builder.Entity<UserAnswers>().
+                HasOne(au => au.User).
+                WithMany(u => u.AnswerUsers).
+                HasForeignKey(au => au.UserId);
 
             // Seed Authors Table
             SeedAuthorsTable(builder);

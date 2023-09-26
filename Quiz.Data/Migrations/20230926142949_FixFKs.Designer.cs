@@ -12,8 +12,8 @@ using Quiz.Data.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    [Migration("20230926125535_DropUserAnswers")]
-    partial class DropUserAnswers
+    [Migration("20230926142949_FixFKs")]
+    partial class FixFKs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Quiz.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AnswerUser", b =>
-                {
-                    b.Property<int>("AnswersId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("AnswersId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("AnswerUser");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -521,19 +506,19 @@ namespace Quiz.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AnswerUser", b =>
+            modelBuilder.Entity("Quiz.Models.Entities.UserAnswers", b =>
                 {
-                    b.HasOne("Quiz.Models.Entities.Answer", null)
-                        .WithMany()
-                        .HasForeignKey("AnswersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
 
-                    b.HasOne("Quiz.Models.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AnswerId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAnswers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -658,6 +643,35 @@ namespace Quiz.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Quiz.Models.Entities.UserAnswers", b =>
+                {
+                    b.HasOne("Quiz.Models.Entities.Answer", "Answer")
+                        .WithMany("AnswerUsers")
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Quiz.Models.Entities.User", "User")
+                        .WithMany("AnswerUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Quiz.Models.Entities.Answer", b =>
+                {
+                    b.Navigation("AnswerUsers");
+                });
+
+            modelBuilder.Entity("Quiz.Models.Entities.User", b =>
+                {
+                    b.Navigation("AnswerUsers");
                 });
 #pragma warning restore 612, 618
         }

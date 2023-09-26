@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data.Data;
 
@@ -11,9 +12,11 @@ using Quiz.Data.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    partial class QuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926142314_manytomany")]
+    partial class manytomany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,6 +190,21 @@ namespace Quiz.Data.Migrations
                     b.HasIndex("QuoteId");
 
                     b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("Quiz.Models.Entities.AnswerUser", b =>
+                {
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AnswerId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AnswerUser");
                 });
 
             modelBuilder.Entity("Quiz.Models.Entities.Author", b =>
@@ -503,21 +521,6 @@ namespace Quiz.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Quiz.Models.Entities.UserAnswers", b =>
-                {
-                    b.Property<int>("AnswerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("AnswerId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAnswers");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -596,6 +599,25 @@ namespace Quiz.Data.Migrations
                     b.Navigation("Quote");
                 });
 
+            modelBuilder.Entity("Quiz.Models.Entities.AnswerUser", b =>
+                {
+                    b.HasOne("Quiz.Models.Entities.Answer", "Answer")
+                        .WithMany("AnswerUsers")
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Quiz.Models.Entities.User", "CurrentUser")
+                        .WithMany("AnswerUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("CurrentUser");
+                });
+
             modelBuilder.Entity("Quiz.Models.Entities.Question", b =>
                 {
                     b.HasOne("Quiz.Models.Entities.Author", "CorrectAuthor")
@@ -640,25 +662,6 @@ namespace Quiz.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("Quiz.Models.Entities.UserAnswers", b =>
-                {
-                    b.HasOne("Quiz.Models.Entities.Answer", "Answer")
-                        .WithMany("AnswerUsers")
-                        .HasForeignKey("AnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quiz.Models.Entities.User", "User")
-                        .WithMany("AnswerUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Answer");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Quiz.Models.Entities.Answer", b =>
