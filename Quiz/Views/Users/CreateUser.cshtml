@@ -1,0 +1,63 @@
+﻿@model CreateUserVM;
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <div class="bg-primary">
+                    <h2 class="text-center text-white">
+                        Create User
+                    </h2>
+                </div>
+
+                <form method="post">
+                    <div class="border p-4 mb-4 border-info">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <a class="btn btn-outline-secondary col-5"
+                               asp-controller="Users" asp-action="UsersGrid">
+                                Cancel
+                            </a>
+
+                            <input class="btn btn-outline-info col-5 float-end" type="submit" value="Create" />
+                        </div>
+                    </div>
+                </form>
+                </>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
