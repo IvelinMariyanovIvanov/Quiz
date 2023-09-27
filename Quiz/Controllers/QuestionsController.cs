@@ -12,12 +12,12 @@ namespace Quiz.Web.Controllers
     /// <summary>
     /// Questions
     /// </summary>
-    public class UsersController : Controller
+    public class QuestionsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;      
         private IMapper _mapper;
 
-        public UsersController(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuestionsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;          
             _mapper = mapper;

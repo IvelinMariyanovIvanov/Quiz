@@ -62,7 +62,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Users}/{action=Questions}/{id?}");
+    pattern: "{controller=Questions}/{action=Questions}/{id?}");
 
 ApplyMigrationsAndSeedDb();
 

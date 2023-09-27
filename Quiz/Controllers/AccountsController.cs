@@ -87,7 +87,7 @@ namespace Quiz.Web.Controllers
                 var isUserSignedIn = await _signInManager.PasswordSignInAsync(user, form.Password, false, false);
 
                 if (isUserSignedIn.Succeeded)
-                    return RedirectToAction("Questions", "Users");
+                    return RedirectToAction(nameof(Constants.Questions), nameof(Constants.Questions));
             }
 
             form.ErrorMessage = "Please enter a valid email or password";
