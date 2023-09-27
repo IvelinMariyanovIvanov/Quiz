@@ -34,10 +34,12 @@ namespace Quiz.Web.Controllers
         [Authorize(Roles = Constants.AdminRole)]
         public async Task<IActionResult> GetAllUsersAPI()
         {
-            List<User> users =
-                await _unitOfWork.UserRepository.GetAllAsync();
+            List<User> users = await _unitOfWork.UserRepository.GetAllAsync(includeTables: "AnswerUsers");
 
-            return Json(new { data = users });
+            // do not show user with no Achievements
+            users = users.Where(u => u.AnswerUsers.Count() > 1).ToList();
+
+            return Json(new { data = users});
         }
 
         [Authorize(Roles = Constants.AdminRole)]
@@ -47,14 +49,14 @@ namespace Quiz.Web.Controllers
               .GetAllWithLinqAsyncAsIQueryable
               (u => u.UserId == userId, includeTables: "User,Answer,Answer.Quote,Answer.Question.CorrectAuthor").ToList();
 
+            if(userAnswers.Count() == 0)
+            {
+                TempData["error"] = $"There are no Achievements for that user";
+                return RedirectToAction(nameof(Users));
+            }
+
             return View(userAnswers);
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetUserAchievementsAPI(string userId)
-        //{
-        //    return null;
-        //}
 
         public IActionResult LogIn()
         {

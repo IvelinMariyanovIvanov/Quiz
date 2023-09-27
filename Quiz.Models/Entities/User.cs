@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 //using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Quiz.Models.Entities
@@ -9,8 +11,7 @@ namespace Quiz.Models.Entities
         [Required]
         public string FullName { get; set; }
 
-        //public ICollection<Answer> Answers { get; set; } = new List<Answer>();
-
+        [JsonIgnore]
         public ICollection<UserAnswers> AnswerUsers { get; set; }
     }
 }
