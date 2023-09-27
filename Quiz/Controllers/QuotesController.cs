@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quiz.Data.Repositories.Interfaces;
+using Quiz.Helpers;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
 
 namespace Quiz.Web.Controllers
 {
+    [Authorize(Roles = Constants.AdminRole)]
     public class QuotesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

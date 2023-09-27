@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Quiz.Data.Migrations;
@@ -36,6 +37,7 @@ namespace Quiz.Web.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> AnswerQuestion(int? id)
         {
             if (id == null | id == 0)
@@ -67,9 +69,9 @@ namespace Quiz.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AnswerQuestion(QuestionVM form, string answerValue)
         {
-            int SelectedAuthorId = form.SelectedAuthorId;
 
             if (!ModelState.IsValid)
                 return View(form);
@@ -93,12 +95,12 @@ namespace Quiz.Web.Controllers
                     AnswerId = form.CorrectAuthorId
                 };
 
-
+                // yes or no
                 if (answerValue == "yes" || answerValue == "no")
                     await SetYesOrNoAnswer(form, answerValue, answer, allAuthors);
                 // multiple
-                else 
-                     SetMultipleAnswer(form, Convert.ToInt32(answerValue), answer, allAuthors);
+                else
+                    SetMultipleAnswer(form, Convert.ToInt32(answerValue), answer, allAuthors);
 
                 await _unitOfWork.AnswerRepository.AddAsync(answer);
                 await _unitOfWork.SaveAsync();
@@ -112,22 +114,28 @@ namespace Quiz.Web.Controllers
                 await _unitOfWork.AnswerUserRepository.AddAsync(answerUser);
                 await _unitOfWork.SaveAsync();
 
-                // get author option value
-                form.RandomAuthor = allAuthors.Where(a => a.Id == form.RandomAuthorId).SingleOrDefault();
-
-                // get author options
-                form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.CorrectAuthorId).SingleOrDefault());
-                form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.FalseAuthor1Id).SingleOrDefault());
-                form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.FalseAuthor2Id).SingleOrDefault());
-
+                SetFormAuthores(form, allAuthors);
                 return View(form);
             }
             catch
             {
                 TempData["error"] = "Can not answer the question";
 
+                SetFormAuthores(form, allAuthors);
                 return View(form);
             }
+        }
+
+        [NonAction]
+        private static void SetFormAuthores(QuestionVM form, List<Author> allAuthors)
+        {
+            // get author option value
+            form.RandomAuthor = allAuthors.Where(a => a.Id == form.RandomAuthorId).SingleOrDefault();
+
+            // get author options
+            form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.CorrectAuthorId).SingleOrDefault());
+            form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.FalseAuthor1Id).SingleOrDefault());
+            form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.FalseAuthor2Id).SingleOrDefault());
         }
 
         [NonAction]

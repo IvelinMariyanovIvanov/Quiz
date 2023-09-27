@@ -8,6 +8,8 @@ using AutoMapper;
 using Quiz.Web;
 using Microsoft.AspNetCore.Builder;
 using Quiz.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,11 @@ IMapper autoMapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(autoMapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+//Authentication
+builder.Services.AddAuthentication
+    (options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+
+// Authorization
 builder.Services
     .AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<QuizDbContext>()
@@ -50,6 +57,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
