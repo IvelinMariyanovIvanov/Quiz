@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Quiz.Data.Migrations;
 using Quiz.Data.Repositories.Interfaces;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
-using System.Security.Claims;
 using UserAnswers = Quiz.Models.Entities.UserAnswers;
 
 namespace Quiz.Web.Controllers
