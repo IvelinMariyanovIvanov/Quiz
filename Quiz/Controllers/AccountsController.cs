@@ -107,7 +107,7 @@ namespace Quiz.Web.Controllers
                 await _userManager.AddToRoleAsync(newUser, Constants.UserRole);
 
                 // navigate to Log In
-                return View("CompleteRegister");
+                return View(nameof(Constants.CompleteRegister));
             }
             // The Password is WEAK or taken
             else

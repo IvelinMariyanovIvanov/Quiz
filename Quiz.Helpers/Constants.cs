@@ -9,6 +9,8 @@ namespace Quiz.Helpers
         public const string AdminPassword = "Admin123$";
         public const string UserPassword = "User123$";
 
+        public const string CompleteRegister = "CompleteRegister";
+
         public enum QuestionType
         {
             /// <summary>
