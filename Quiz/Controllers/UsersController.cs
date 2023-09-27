@@ -72,7 +72,9 @@ namespace Quiz.Web.Controllers
             if (!ModelState.IsValid)
                 return View(form);
 
+            int SelectedAuthorId = form.SelectedAuthorId;
             string userId = User.Identity.GetUserId();
+
 
             if(userId == null)
             {
@@ -89,7 +91,10 @@ namespace Quiz.Web.Controllers
                     AnswerId = form.CorrectAuthorId
                 };
 
-                await SetAnswer(form, submit, answer);
+                if(submit == "multiple")
+                    await SetMultipleAnswer(form, submit, answer);
+                else
+                    await SetYesOrNoAnswer(form, submit, answer);
 
                 await _unitOfWork.AnswerRepository.AddAsync(answer);
                 await _unitOfWork.SaveAsync();
@@ -117,7 +122,13 @@ namespace Quiz.Web.Controllers
         }
 
         [NonAction]
-        private async Task SetAnswer(QuestionVM form, string submit, Answer answer)
+        private Task SetMultipleAnswer(QuestionVM form, string submit, Answer answer)
+        {
+            throw new NotImplementedException();
+        }
+
+        [NonAction]
+        private async Task SetYesOrNoAnswer(QuestionVM form, string submit, Answer answer)
         {
             if (submit == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
             {

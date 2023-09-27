@@ -13,7 +13,7 @@
 <div class="container col-md-6">
     <div class="card shadow border-0 mt-4 justify-content-center">
         <div class="card-body justify-content-center">
-            <form method="post">
+            <form method="post" id="answerForm">
                 <input asp-for="FalseAuthor1" hidden />
                 <input asp-for="FalseAuthor1" hidden />
                 <input asp-for="CorrectAuthorId" hidden />
@@ -22,6 +22,7 @@
                 <input asp-for="RandomAuthorId" hidden />
                 <input asp-for="RandomAuthor" hidden />
                 <input asp-for="CorrectAuthor" hidden />
+                <input asp-for="SelectedAuthorId" hidden />
 
                 <!-- Nav tabs -->
                 <div class="container" style="margin-top: 10px;">
@@ -49,7 +50,7 @@
                                     <div class="row form-floating shadow">
                                         <textarea asp-for="@Model.AskedQuote.Text"
                                                   class="form-control" readonly
-                                                  style="background-color:deeppink; min-width:500px; max-width:100%;min-height:100px;height:100%;width:100%;">
+                                                  style="background-color:deeppink;max-width:100%;min-height:100px;height:100%;width:100%;">
                                          </textarea>
                                     </div>
 
@@ -81,20 +82,36 @@
                             <h4 class="mt-2"> Who Said it ?</h4>
                             <!-- Multiple -->
                             <div class="container justify-content-center">
-                                <div class="mt-4">
+                                <div class="mt-2">
+                                    <div class="row form-floating shadow">
+                                        <textarea asp-for="@Model.AskedQuote.Text"
+                                                  class="form-control" readonly
+                                                  style="background-color:deeppink;max-width:100%;min-height:100px;height:100%;width:100%;">
+                                         </textarea>
+                                    </div>
+
                                     <!-- Multiple Options -->
-                                    <div class="form-check">
+                                    <div class="mt-2">
                                         @foreach (Author author in Model.MultipleOptionAuthorList)
                                         {
-                                            <!-- div class button -->
                                             <div class="form-check" style="background-color:gray">
-                                                <input class="form-check-input" type="radio" name="radioBtn" id="@author.Name" value="@author.Id">
+                                                <!--onclick="$(this.form).submit()" -->
+                                                <input asp-for="SelectedAuthorId"
+                                                       name="radioBtn" id="@author.Name" value="@author.Id"
+                                                       type="radio" class="form-check-input" />
                                                @* <i class="bi bi-arrow-right-short"></i>*@
                                                 <label class="form-check-label text-white" for="@author.Name">
                                                     @author.Name
                                                 </label>
                                             </div>
                                         }
+                                    <!-- YesNoButtons -->
+                                    <div class="d-flex justify-content-end">
+                                        <button name="submit" type="submit"
+                                                class="btn col-6 col-md-3 fw-bold text-white"
+                                                style="background-color:limegreen" value="multiple">
+                                            Check
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -107,5 +124,15 @@
 </div>
 
 @section Scripts{
+    <script>
+        //$(document).ready(function () {
+        //    $('input[type=radio]').on('click', function () {
+        //        debugger
+        //        let form = $("#answerForm");
+        //        form.submit();
+        //    });
+        //});
+    </script>
+
     <partial name="_ValidationScriptsPartial" />
 }

@@ -28,8 +28,8 @@ namespace Quiz.Web.ViewModels
         public Author CorrectAuthor { get; set; }
         public int CorrectAuthorId { get; set; }
 
+  
+        public int SelectedAuthorId { get; set; }
         public List<Author> MultipleOptionAuthorList { get; set; } = new List<Author>();
-
-
     }
 }
