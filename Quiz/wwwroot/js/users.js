@@ -16,7 +16,7 @@ function createUsersTable() {
                 data: 'id',
                 render: function (data) {
                     return `<div class="d-flex justify-content-between">
-                                    <a href="/Users/AnswerQuestion?id=${data} "class="btn btn-outline-primary">
+                                    <a href="/Accounts/UserAchievements?userId=${data} "class="btn btn-outline-primary">
                                         <i class="bi bi-question-square"></i>
                                         Achievements
                                     </a>

@@ -5,9 +5,11 @@ using Quiz.Data.Repositories.Interfaces;
 using Quiz.Helpers;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
+using System.Data.Entity;
 
 namespace Quiz.Web.Controllers
 {
+    [Authorize(Roles = Constants.AdminRole)]
     public class AccountsController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -21,21 +23,34 @@ namespace Quiz.Web.Controllers
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
         }
-
-        [Authorize(Roles = Constants.AdminRole)]
-        public IActionResult UserAchievements()
+       
+        public IActionResult Users()
         {
             return View();
         }
 
         [HttpGet]
-        [Authorize(Roles = Constants.AdminRole)]
         public async Task<IActionResult> GetAllUsersAPI()
         {
             List<User> users =
                 await _unitOfWork.UserRepository.GetAllAsync();
 
-            return Json(new { data = users.OrderBy(i => i.Id) });
+            return Json(new { data = users });
+        }
+
+        public IActionResult UserAchievements(string userId)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserAchievementsAPI(string userId)
+        {
+            List<UserAnswers> userAnswers =  await _unitOfWork.AnswerUserRepository
+                .GetAllWithLinqAsyncAsIQueryable
+                (u => u.UserId == userId, includeTables: "User,Answer").ToListAsync();
+
+            return Json(new { data = userAnswers });
         }
 
         public IActionResult LogIn()
