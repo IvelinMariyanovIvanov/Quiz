@@ -51,19 +51,6 @@ namespace Quiz.Web.Controllers
 
             QuestionVM viewModel = _mapper.Map<QuestionVM>(question);
 
-            // set on random if CorrectAuthorId = FalseAuthor1Id
-            //Random rnd = new Random();
-            //viewModel.RandomAuthorId = rnd.Next(question.CorrectAuthorId, question.FalseAuthor1Id + 1);
-            //Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(viewModel.RandomAuthorId);
-
-            //viewModel.OptionAuthorId = question.FalseAuthor1Id;
-            //Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(viewModel.OptionAuthorId);
-
-            //if (randomAuthor == null)
-            //    randomAuthor = question.CorrectAuthor;
-            //else
-            //    viewModel.OptionAuthor = randomAuthor;
-
             viewModel.MultipleOptionAuthorList.Add(viewModel.CorrectAuthor);
             viewModel.MultipleOptionAuthorList.Add(viewModel.FalseAuthor1);
             viewModel.MultipleOptionAuthorList.Add(viewModel.FalseAuthor2);
@@ -117,7 +104,7 @@ namespace Quiz.Web.Controllers
                 await _unitOfWork.AnswerUserRepository.AddAsync(answerUser);
                 await _unitOfWork.SaveAsync();
 
-                SetFormAuthors(form, allAuthors, answer);
+                await SetFormAuthors(form, allAuthors, answer);
 
                 return View(form);
             }
@@ -125,21 +112,23 @@ namespace Quiz.Web.Controllers
             {
                 TempData["error"] = "Can not answer the question";
 
-                SetFormAuthors(form, allAuthors, answer);
+                await SetFormAuthors(form, allAuthors, answer);
 
                 return View(form);
             }
         }
 
         [NonAction]
-        private static async void SetFormAuthors(QuestionVM form, List<Author> allAuthors, Answer answer)
+        private async Task  SetFormAuthors(QuestionVM form, List<Author> allAuthors, Answer answer)
         {
             form.ShowNextButton = true;
             form.ShowAnswersOptions = false;
 
-            form.NextQuestionId = form.Id + 1;
-      
-           // form.NextQuestionId = await _unitOfWork.AuthorRepository.GetEntityAsync(a => a.Id != form.Id).Id; 
+            // set nxt question
+            var questions = await _unitOfWork.QuestionRepository.GetAllAsync();
+
+            form.NextQuestionId = questions.Where(q => q.Id != form.Id).FirstOrDefault().Id;
+ 
 
             form.CorrectAuthor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
 
