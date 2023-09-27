@@ -5,14 +5,12 @@
     <div class="card shadow border-0 mt-4 justify-content-center">
         <div class="card-body justify-content-center">
             <form method="post" id="answerForm">
-                <input asp-for="FalseAuthor1" hidden />
-                <input asp-for="FalseAuthor1" hidden />
-                <input asp-for="CorrectAuthorId" hidden />
-                <input asp-for="QuoteId" hidden />
                 <input asp-for="Id" hidden />
+                <input asp-for="CorrectAuthorId" hidden />
+                <input asp-for="FalseAuthor1Id" hidden />
+                <input asp-for="FalseAuthor2Id" hidden />
+                <input asp-for="QuoteId" hidden />
                 <input asp-for="RandomAuthorId" hidden />
-                <input asp-for="RandomAuthor" hidden />
-                <input asp-for="CorrectAuthor" hidden />
                 <input asp-for="SelectedAuthorId" hidden />
 
                 <!-- Nav tabs -->
@@ -40,7 +38,7 @@
                                 <div class="mb-4">
                                     <div class="row form-floating shadow">
                                         <textarea asp-for="@Model.AskedQuote.Text"
-                                                  class="form-control" readonly
+                                                  class="form-control" disabled
                                                   style="background-color:deeppink;max-width:100%;min-height:100px;height:100%;width:100%;">
                                          </textarea>
                                     </div>

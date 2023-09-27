@@ -76,12 +76,13 @@ namespace Quiz.Web.Controllers
 
             string userId = User.Identity.GetUserId();
 
-
             if(userId == null)
             {
                 TempData["error"] = "Please Log In";
                 return View(form);
             }
+
+            List<Author> allAuthors = await _unitOfWork.AuthorRepository.GetAllAsync();
 
             try
             {
@@ -92,12 +93,12 @@ namespace Quiz.Web.Controllers
                     AnswerId = form.CorrectAuthorId
                 };
 
-                
-                if(answerValue =="yes" || answerValue == "no")
-                    await SetYesOrNoAnswer(form, answerValue, answer);
+
+                if (answerValue == "yes" || answerValue == "no")
+                    await SetYesOrNoAnswer(form, answerValue, answer, allAuthors);
                 // multiple
                 else 
-                    await SetMultipleAnswer(form, Convert.ToInt32(answerValue), answer);
+                     SetMultipleAnswer(form, Convert.ToInt32(answerValue), answer, allAuthors);
 
                 await _unitOfWork.AnswerRepository.AddAsync(answer);
                 await _unitOfWork.SaveAsync();
@@ -112,12 +113,12 @@ namespace Quiz.Web.Controllers
                 await _unitOfWork.SaveAsync();
 
                 // get author option value
-                form.RandomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
+                form.RandomAuthor = allAuthors.Where(a => a.Id == form.RandomAuthorId).SingleOrDefault();
 
                 // get author options
-                form.MultipleOptionAuthorList.Add(form.CorrectAuthor);
-                form.MultipleOptionAuthorList.Add(form.FalseAuthor1);
-                form.MultipleOptionAuthorList.Add(form.FalseAuthor2);
+                form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.CorrectAuthorId).SingleOrDefault());
+                form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.FalseAuthor1Id).SingleOrDefault());
+                form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.FalseAuthor2Id).SingleOrDefault());
 
                 return View(form);
             }
@@ -130,12 +131,12 @@ namespace Quiz.Web.Controllers
         }
 
         [NonAction]
-        private async Task SetMultipleAnswer(QuestionVM form, int selectedAuthortId, Answer answer)
+        private void SetMultipleAnswer(QuestionVM form, int selectedAuthortId, Answer answer, List<Author> allAuthors)
         {
-            if(selectedAuthortId == form.CorrectAuthorId)
-            {
-                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+            Author author = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
 
+            if (selectedAuthortId == form.CorrectAuthorId)
+            {
                 answer.IsCorrect = true;
                 answer.AnswerText = author.Name;
                 answer.AnswerId = form.CorrectAuthorId;
@@ -144,8 +145,6 @@ namespace Quiz.Web.Controllers
             }
             else
             {
-                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
-
                 answer.IsCorrect = false;
                 answer.AnswerText = author.Name;
                 answer.AnswerId = form.CorrectAuthorId;
@@ -155,34 +154,30 @@ namespace Quiz.Web.Controllers
         }
 
         [NonAction]
-        private async Task SetYesOrNoAnswer(QuestionVM form, string answerValue, Answer answer)
+        private async Task SetYesOrNoAnswer(QuestionVM form, string answerValue, Answer answer, List<Author> allAuthors)
         {
+            Author correctAuthor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
+
             if (answerValue == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
             {
-                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
-
                 answer.IsCorrect = true;
-                answer.AnswerText = author.Name;
+                answer.AnswerText = correctAuthor.Name;
                 answer.AnswerId = form.CorrectAuthorId;
 
                 TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
             }
             else if (answerValue == "yes" && form.RandomAuthorId != form.CorrectAuthorId)
             {
-                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
-
                 answer.IsCorrect = false;
-                answer.AnswerText = author.Name;
+                answer.AnswerText = correctAuthor.Name;
                 answer.AnswerId = form.RandomAuthorId;
 
                 TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
             }
             else if (answerValue == "no" && form.RandomAuthorId != form.CorrectAuthorId)
             {
-                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
-
                 answer.IsCorrect = true;
-                answer.AnswerText = author.Name;
+                answer.AnswerText = correctAuthor.Name;
                 answer.AnswerId = form.CorrectAuthorId;
 
                 TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
