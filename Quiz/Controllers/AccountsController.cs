@@ -22,12 +22,20 @@ namespace Quiz.Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        // [Authorize(Roles = Constants.AdminRole)]
-        public async Task<IActionResult> Users()
+        [Authorize(Roles = Constants.AdminRole)]
+        public IActionResult UserAchievements()
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            return View();
+        }
 
-            return View(users);
+        [HttpGet]
+        [Authorize(Roles = Constants.AdminRole)]
+        public async Task<IActionResult> GetAllUsersAPI()
+        {
+            List<User> users =
+                await _unitOfWork.UserRepository.GetAllAsync();
+
+            return Json(new { data = users.OrderBy(i => i.Id) });
         }
 
         public IActionResult LogIn()

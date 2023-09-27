@@ -1,0 +1,27 @@
+﻿@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="container justify-content-center col-md-8">
+    <div class="row mb-2">
+        <div class="col-6">
+            <h2 class="text-primary">User Achievements</h2>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped" width="100%" id="userAchievementsTable">
+        <thead>
+            <tr>
+                <th class="col-2 text-center">Name</th>
+                <th class="col-2 text-center"><h4>Email</h4></th>
+                <th class="col-1"></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts{
+    <script src="~/js/userAchievements.js"></script>
+}

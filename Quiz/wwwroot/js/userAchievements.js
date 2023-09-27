@@ -1,28 +1,27 @@
 ﻿let dataTable;
 
 $(document).ready(function () {
-    createUserQuotesTable();
+    createUsersTable();
 });
 
-function createUserQuotesTable() {
-    dataTable = $('#usersQuotesTable').DataTable({
+function createUsersTable() {
+    dataTable = $('#userAchievementsTable').DataTable({
         ajax: {
-            url: '/Users/GetAllQuestionsAPI'
+            url: '/Accounts/GetAllUsersAPI'
         },
         columns: [
-            { data: 'id' },
-            { data: 'text' },
+            { data: 'fullName' },
+            { data: 'email' },
             {
                 data: 'id',
                 render: function (data) {
                     return `<div class="d-flex justify-content-between">
                                     <a href="/Users/AnswerQuestion?id=${data} "class="btn btn-outline-primary">
                                         <i class="bi bi-question-square"></i>
-                                        Answer
+                                        Achievements
                                     </a>
                             </div>`
-                },
-                "with": "25%"
+                }
             }
         ]
     });
