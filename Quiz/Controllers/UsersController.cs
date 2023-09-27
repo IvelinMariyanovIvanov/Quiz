@@ -76,5 +76,26 @@ namespace Quiz.Web.Controllers
                 return View(form);
             }
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserAPI(string id)
+        {
+            User user = await _unitOfWork.UserRepository.GetEntityAsync(u => u.Id == id);
+
+            if (user == null)
+                return Json(new { success = false, message = "Not found" });
+
+            try
+            {
+                _unitOfWork.UserRepository.Delete(user);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = $"Can not delete the user with na,e {user.FullName}" });
+            }
+
+            return Json(new { success = true, message = $"The user with name {user.FullName} is deleted" });
+        }
     }
 }
