@@ -44,26 +44,49 @@
                                     </div>
 
                                     <div class="mt-4">
-                                        <div class="mt-2 text-center">
-                                            <p>@Model.RandomAuthor.Name ?</p>
-                                        </div>
+                                        @if(Model.ShowAnswersOptions)
+                                        {
+                                            <!-- Option Author -->
+                                            <div class="mt-2 text-center">
+                                                <p>@Model.RandomAuthor.Name ?</p>
+                                            </div>
 
-                                        <!-- YesNoButtons -->
-                                        <div class="d-flex justify-content-between">
-                                            <button name="answerValue" value="yes"
-                                                    onclick="this.form.submit()"
-                                                    class="btn col-6 col-md-3 fw-bold text-white"
-                                                    style="background-color:limegreen" >
-                                                Yes
-                                            </button>
+                                            <!-- YesNoButtons -->
+                                            <div class="d-flex justify-content-between">
+                                                <button name="answerValue" value="yes"
+                                                        onclick="this.form.submit()"
+                                                        class="btn col-6 col-md-3 fw-bold text-white"
+                                                        style="background-color:limegreen">
+                                                    Yes
+                                                </button>
 
-                                            <button name="answerValue" value="no"
-                                                    onclick="this.form.submit()"
-                                                    class="btn col-6 col-md-3 fw-bold text-white"
-                                                    style="background-color:crimson">
-                                                No
-                                            </button>
-                                        </div>
+                                                <button name="answerValue" value="no"
+                                                        onclick="this.form.submit()"
+                                                        class="btn col-6 col-md-3 fw-bold text-white"
+                                                        style="background-color:crimson">
+                                                    No
+                                                </button>
+                                            </div>
+                                        }
+
+                                        @if (Model.ShowNextButton)
+                                        {
+                                            <!-- Correct Author -->
+                                             <div class="mt-2 text-center">
+                                                <p>@Model.CorrectAuthor.Name</p>
+                                            </div>
+
+                                            <!-- Next Button -->
+                                            <div class="d-flex justify-content-center">
+                                                <a asp-action="AnswerQuestion" asp-route-id="@Model.NextQuestionId"
+                                                        name="answerValue" value="next"
+                                                        onclick="this.form.submit()"
+                                                        class="btn btn-outline-light col-6 col-md-3 fw-bold text-white"
+                                                        style="background-color:lightblue">
+                                                    Next
+                                                </a>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -82,23 +105,45 @@
                                     </div>
 
                                     <!-- Multiple Options -->
-                                    <div class="mt-2">
-                                        @foreach (Author author in Model.MultipleOptionAuthorList)
-                                        {
-                                            <div class="form-check" style="background-color:gray">
-                                                <input name="answerValue" value="@author.Id"
-                                                       asp-for="SelectedAuthorId"
-                                                       type="radio" class="form-check-input" id="@author.Name"
-                                                       onclick="this.form.submit()" />
+                                    @if (Model.ShowAnswersOptions)
+                                    {
+                                        <div class="mt-2">
+                                            @foreach (Author author in Model.MultipleOptionAuthorList)
+                                            {
+                                                <div class="form-check" style="background-color:gray">
+                                                    <input name="answerValue" value="@author.Id"
+                                                           asp-for="SelectedAuthorId"
+                                                           type="radio" class="form-check-input" id="@author.Name"
+                                                           onclick="this.form.submit()" />
 
-                                                <label class="form-check-label text-white" for="@author.Name">
-                                                    @author.Name
-                                                </label>
-                                            </div>
-                                        }
-                                    </div>
+                                                    <label class="form-check-label text-white" for="@author.Name">
+                                                        @author.Name
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
                                 </div>
                             </div>
+
+                            <!-- Next Button -->
+                            @if(Model.ShowNextButton)
+                            {
+                                <!-- Correct Author -->
+                                <div class="mt-2 text-center">
+                                    <p>@Model.CorrectAuthor.Name</p>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <a asp-action="AnswerQuestion" asp-route-id="@Model.NextQuestionId"
+                                        name="answerValue" value="next"
+                                            onclick="this.form.submit()"
+                                            class="btn btn-outline-light col-6 col-md-3 fw-bold text-white"
+                                            style="background-color:lightblue">
+                                        Next
+                                    </a>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

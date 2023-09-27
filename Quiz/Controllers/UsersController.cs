@@ -9,6 +9,9 @@ using UserAnswers = Quiz.Models.Entities.UserAnswers;
 
 namespace Quiz.Web.Controllers
 {
+    /// <summary>
+    /// Questions
+    /// </summary>
     public class UsersController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;      
@@ -83,15 +86,15 @@ namespace Quiz.Web.Controllers
 
             List<Author> allAuthors = await _unitOfWork.AuthorRepository.GetAllAsync();
 
+            Answer answer = new Answer()
+            {
+                QuestionId = form.Id,
+                QuoteId = form.QuoteId,
+                AnswerId = form.CorrectAuthorId
+            };
+
             try
             {
-                Answer answer = new Answer()
-                {
-                    QuestionId = form.Id,
-                    QuoteId = form.QuoteId,
-                    AnswerId = form.CorrectAuthorId
-                };
-
                 // yes or no
                 if (answerValue == "yes" || answerValue == "no")
                     await SetYesOrNoAnswer(form, answerValue, answer, allAuthors);
@@ -111,21 +114,30 @@ namespace Quiz.Web.Controllers
                 await _unitOfWork.AnswerUserRepository.AddAsync(answerUser);
                 await _unitOfWork.SaveAsync();
 
-                SetFormAuthores(form, allAuthors);
+                SetFormAuthors(form, allAuthors, answer);
+
                 return View(form);
             }
             catch
             {
                 TempData["error"] = "Can not answer the question";
 
-                SetFormAuthores(form, allAuthors);
+                SetFormAuthors(form, allAuthors, answer);
+
                 return View(form);
             }
         }
 
         [NonAction]
-        private static void SetFormAuthores(QuestionVM form, List<Author> allAuthors)
+        private static void SetFormAuthors(QuestionVM form, List<Author> allAuthors, Answer answer)
         {
+            form.ShowNextButton = true;
+            form.ShowAnswersOptions = false;
+
+            form.NextQuestionId = form.Id + 1;
+
+            form.CorrectAuthor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
+
             // get author option value
             form.RandomAuthor = allAuthors.Where(a => a.Id == form.RandomAuthorId).SingleOrDefault();
 

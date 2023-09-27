@@ -31,5 +31,9 @@ namespace Quiz.Web.ViewModels
   
         public int SelectedAuthorId { get; set; }
         public List<Author> MultipleOptionAuthorList { get; set; } = new List<Author>();
+
+        public bool ShowAnswersOptions { get; set; } = true;
+        public bool ShowNextButton { get; set; } = false;
+        public int NextQuestionId { get; set; }
     }
 }
