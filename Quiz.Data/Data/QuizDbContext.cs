@@ -72,7 +72,7 @@ namespace Quiz.Data.Data
                 new Quote { Id = 6, AuthorId = 2, Text = "You will not be punished for your anger, you will be punished by your anger." },
                 new Quote { Id = 7, AuthorId = 3, Text = "In order to carry a positive action we must develop here a positive vision." },
                 new Quote { Id = 8, AuthorId = 3, Text = "Be kind whenever possible. It is always possible." },
-                new Quote { Id = 9, AuthorId = 3, Text = "Be kind whenever possible. It is always possible." }
+                new Quote { Id = 9, AuthorId = 3, Text = "A lack of transparency results in distrust and a deep sense of insecurity." }
             );
         }
 

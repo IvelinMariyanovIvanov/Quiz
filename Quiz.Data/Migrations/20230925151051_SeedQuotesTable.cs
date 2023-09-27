@@ -25,7 +25,7 @@ namespace Quiz.Data.Migrations
                     { 6, 2, null, "You will not be punished for your anger, you will be punished by your anger." },
                     { 7, 3, null, "In order to carry a positive action we must develop here a positive vision." },
                     { 8, 3, null, "Be kind whenever possible. It is always possible." },
-                    { 9, 3, null, "Be kind whenever possible. It is always possible." }
+                    { 9, 3, null, "A lack of transparency results in distrust and a deep sense of insecurity." }
                 });
         }
 

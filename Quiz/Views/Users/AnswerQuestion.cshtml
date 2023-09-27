@@ -1,14 +1,5 @@
 ﻿@model QuestionVM
 
-@*<style>
-    .button input[type="radio"] {
-        display: none;
-    }
-
-    input[type="radio"]:checked + label {
-        border: 1px solid red;
-    }
-</style>*@
 
 <div class="container col-md-6">
     <div class="card shadow border-0 mt-4 justify-content-center">
@@ -61,15 +52,17 @@
 
                                         <!-- YesNoButtons -->
                                         <div class="d-flex justify-content-between">
-                                            <button name="submit" type="submit"
+                                            <button name="answerValue" value="yes"
+                                                    onclick="this.form.submit()"
                                                     class="btn col-6 col-md-3 fw-bold text-white"
-                                                    style="background-color:limegreen" value="yes">
+                                                    style="background-color:limegreen" >
                                                 Yes
                                             </button>
 
-                                            <button name="submit" type="submit"
+                                            <button name="answerValue" value="no"
+                                                    onclick="this.form.submit()"
                                                     class="btn col-6 col-md-3 fw-bold text-white"
-                                                    style="background-color:crimson" value="no">
+                                                    style="background-color:crimson">
                                                 No
                                             </button>
                                         </div>
@@ -95,23 +88,16 @@
                                         @foreach (Author author in Model.MultipleOptionAuthorList)
                                         {
                                             <div class="form-check" style="background-color:gray">
-                                                <!--onclick="$(this.form).submit()" -->
-                                                <input asp-for="SelectedAuthorId"
-                                                       name="radioBtn" id="@author.Name" value="@author.Id"
-                                                       type="radio" class="form-check-input" />
-                                               @* <i class="bi bi-arrow-right-short"></i>*@
+                                                <input name="answerValue" value="@author.Id"
+                                                       asp-for="SelectedAuthorId"
+                                                       type="radio" class="form-check-input" id="@author.Name"
+                                                       onclick="this.form.submit()" />
+
                                                 <label class="form-check-label text-white" for="@author.Name">
                                                     @author.Name
                                                 </label>
                                             </div>
                                         }
-                                    <!-- YesNoButtons -->
-                                    <div class="d-flex justify-content-end">
-                                        <button name="submit" type="submit"
-                                                class="btn col-6 col-md-3 fw-bold text-white"
-                                                style="background-color:limegreen" value="multiple">
-                                            Check
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -124,15 +110,5 @@
 </div>
 
 @section Scripts{
-    <script>
-        //$(document).ready(function () {
-        //    $('input[type=radio]').on('click', function () {
-        //        debugger
-        //        let form = $("#answerForm");
-        //        form.submit();
-        //    });
-        //});
-    </script>
-
     <partial name="_ValidationScriptsPartial" />
 }

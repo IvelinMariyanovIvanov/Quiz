@@ -67,12 +67,13 @@ namespace Quiz.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AnswerQuestion(QuestionVM form, string submit)
+        public async Task<IActionResult> AnswerQuestion(QuestionVM form, string answerValue)
         {
+            int SelectedAuthorId = form.SelectedAuthorId;
+
             if (!ModelState.IsValid)
                 return View(form);
 
-            int SelectedAuthorId = form.SelectedAuthorId;
             string userId = User.Identity.GetUserId();
 
 
@@ -91,10 +92,12 @@ namespace Quiz.Web.Controllers
                     AnswerId = form.CorrectAuthorId
                 };
 
-                if(submit == "multiple")
-                    await SetMultipleAnswer(form, submit, answer);
-                else
-                    await SetYesOrNoAnswer(form, submit, answer);
+                
+                if(answerValue =="yes" || answerValue == "no")
+                    await SetYesOrNoAnswer(form, answerValue, answer);
+                // multiple
+                else 
+                    await SetMultipleAnswer(form, Convert.ToInt32(answerValue), answer);
 
                 await _unitOfWork.AnswerRepository.AddAsync(answer);
                 await _unitOfWork.SaveAsync();
@@ -111,6 +114,11 @@ namespace Quiz.Web.Controllers
                 // get author option value
                 form.RandomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
 
+                // get author options
+                form.MultipleOptionAuthorList.Add(form.CorrectAuthor);
+                form.MultipleOptionAuthorList.Add(form.FalseAuthor1);
+                form.MultipleOptionAuthorList.Add(form.FalseAuthor2);
+
                 return View(form);
             }
             catch
@@ -122,15 +130,9 @@ namespace Quiz.Web.Controllers
         }
 
         [NonAction]
-        private Task SetMultipleAnswer(QuestionVM form, string submit, Answer answer)
+        private async Task SetMultipleAnswer(QuestionVM form, int selectedAuthortId, Answer answer)
         {
-            throw new NotImplementedException();
-        }
-
-        [NonAction]
-        private async Task SetYesOrNoAnswer(QuestionVM form, string submit, Answer answer)
-        {
-            if (submit == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
+            if(selectedAuthortId == form.CorrectAuthorId)
             {
                 Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
 
@@ -140,7 +142,32 @@ namespace Quiz.Web.Controllers
 
                 TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
             }
-            else if (submit == "yes" && form.RandomAuthorId != form.CorrectAuthorId)
+            else
+            {
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+
+                answer.IsCorrect = false;
+                answer.AnswerText = author.Name;
+                answer.AnswerId = form.CorrectAuthorId;
+
+                TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
+            }
+        }
+
+        [NonAction]
+        private async Task SetYesOrNoAnswer(QuestionVM form, string answerValue, Answer answer)
+        {
+            if (answerValue == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
+            {
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
+
+                answer.IsCorrect = true;
+                answer.AnswerText = author.Name;
+                answer.AnswerId = form.CorrectAuthorId;
+
+                TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
+            }
+            else if (answerValue == "yes" && form.RandomAuthorId != form.CorrectAuthorId)
             {
                 Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
 
@@ -150,7 +177,7 @@ namespace Quiz.Web.Controllers
 
                 TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
             }
-            else if (submit == "no" && form.RandomAuthorId != form.CorrectAuthorId)
+            else if (answerValue == "no" && form.RandomAuthorId != form.CorrectAuthorId)
             {
                 Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.CorrectAuthorId);
 
@@ -160,7 +187,7 @@ namespace Quiz.Web.Controllers
 
                 TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
             }
-            else if (submit == "no" && form.RandomAuthorId == form.CorrectAuthorId)
+            else if (answerValue == "no" && form.RandomAuthorId == form.CorrectAuthorId)
             {
                 Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
 
