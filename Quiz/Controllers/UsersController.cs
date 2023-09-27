@@ -51,15 +51,18 @@ namespace Quiz.Web.Controllers
 
             QuestionVM viewModel = _mapper.Map<QuestionVM>(question);
 
-            // set if CorrectAuthorId = FalseAuthor1Id
-            Random rnd = new Random();
-            viewModel.RandomAuthorId = rnd.Next(question.CorrectAuthorId, ++question.FalseAuthor1Id);
-            Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(viewModel.RandomAuthorId);
+            // set on random if CorrectAuthorId = FalseAuthor1Id
+            //Random rnd = new Random();
+            //viewModel.RandomAuthorId = rnd.Next(question.CorrectAuthorId, question.FalseAuthor1Id + 1);
+            //Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(viewModel.RandomAuthorId);
 
-            if (randomAuthor == null)
-                randomAuthor = question.CorrectAuthor;
-            else
-                viewModel.RandomAuthor = randomAuthor;
+            //viewModel.OptionAuthorId = question.FalseAuthor1Id;
+            //Author randomAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(viewModel.OptionAuthorId);
+
+            //if (randomAuthor == null)
+            //    randomAuthor = question.CorrectAuthor;
+            //else
+            //    viewModel.OptionAuthor = randomAuthor;
 
             viewModel.MultipleOptionAuthorList.Add(viewModel.CorrectAuthor);
             viewModel.MultipleOptionAuthorList.Add(viewModel.FalseAuthor1);
@@ -129,17 +132,19 @@ namespace Quiz.Web.Controllers
         }
 
         [NonAction]
-        private static void SetFormAuthors(QuestionVM form, List<Author> allAuthors, Answer answer)
+        private static async void SetFormAuthors(QuestionVM form, List<Author> allAuthors, Answer answer)
         {
             form.ShowNextButton = true;
             form.ShowAnswersOptions = false;
 
             form.NextQuestionId = form.Id + 1;
+      
+           // form.NextQuestionId = await _unitOfWork.AuthorRepository.GetEntityAsync(a => a.Id != form.Id).Id; 
 
             form.CorrectAuthor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
 
             // get author option value
-            form.RandomAuthor = allAuthors.Where(a => a.Id == form.RandomAuthorId).SingleOrDefault();
+            form.OptionAuthor = allAuthors.Where(a => a.Id == form.OptionAuthorId).SingleOrDefault();
 
             // get author options
             form.MultipleOptionAuthorList.Add(allAuthors.Where(a => a.Id == form.CorrectAuthorId).SingleOrDefault());
@@ -175,9 +180,9 @@ namespace Quiz.Web.Controllers
         private async Task SetYesOrNoAnswer(QuestionVM form, string answerValue, Answer answer, List<Author> allAuthors)
         {
             Author correctAuthor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
-            Author falseAuthor = allAuthors.SingleOrDefault(a => a.Id == form.RandomAuthorId);
+            Author falseAuthor = allAuthors.SingleOrDefault(a => a.Id == form.OptionAuthorId);
 
-            if (answerValue == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
+            if (answerValue == "yes" && form.OptionAuthorId == form.CorrectAuthorId)
             {
                 answer.IsCorrect = true;
                 answer.AnswerText = correctAuthor.Name;
@@ -185,15 +190,15 @@ namespace Quiz.Web.Controllers
 
                 TempData["success"] = $"Correct! The right answer is: {correctAuthor.Name}";
             }
-            else if (answerValue == "yes" && form.RandomAuthorId != form.CorrectAuthorId)
+            else if (answerValue == "yes" && form.OptionAuthorId != form.CorrectAuthorId)
             {
                 answer.IsCorrect = false;
                 answer.AnswerText = falseAuthor.Name;
-                answer.AnswerId = form.RandomAuthorId;
+                answer.AnswerId = form.OptionAuthorId;
 
                 TempData["error"] = $"Sorry, you are wrong! The right answer is: {correctAuthor.Name}";
             }
-            else if (answerValue == "no" && form.RandomAuthorId != form.CorrectAuthorId)
+            else if (answerValue == "no" && form.OptionAuthorId != form.CorrectAuthorId)
             {
                 answer.IsCorrect = true;
                 answer.AnswerText = correctAuthor.Name;
@@ -201,13 +206,13 @@ namespace Quiz.Web.Controllers
 
                 TempData["success"] = $"Correct! The right answer is: {correctAuthor.Name}";
             }
-            else if (answerValue == "no" && form.RandomAuthorId == form.CorrectAuthorId)
+            else if (answerValue == "no" && form.OptionAuthorId == form.CorrectAuthorId)
             {
-                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.RandomAuthorId);
+                Author author = await _unitOfWork.AuthorRepository.GetByIdAsync(form.OptionAuthorId);
 
                 answer.IsCorrect = false;
                 answer.AnswerText = author.Name;
-                answer.AnswerId = form.RandomAuthorId;
+                answer.AnswerId = form.OptionAuthorId;
 
                 TempData["error"] = $"Sorry, you are wrong! The right answer is: {correctAuthor.Name}";
             }

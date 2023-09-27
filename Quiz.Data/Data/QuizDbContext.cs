@@ -49,15 +49,15 @@ namespace Quiz.Data.Data
         private static void SeedQuestionsTable(ModelBuilder builder)
         {
             builder.Entity<Question>().HasData(
-                new Question { Id = 1, QuoteId = 1, CorrectAuthorId = 1, FalseAuthor1Id = 2, FalseAuthor2Id = 3 },
-                new Question { Id = 2, QuoteId = 2, CorrectAuthorId = 1, FalseAuthor1Id = 3, FalseAuthor2Id = 4 },
-                new Question { Id = 3, QuoteId = 3, CorrectAuthorId = 1, FalseAuthor1Id = 4, FalseAuthor2Id = 5 },
-                new Question { Id = 4, QuoteId = 4, CorrectAuthorId = 2, FalseAuthor1Id = 5, FalseAuthor2Id = 6 },
-                new Question { Id = 5, QuoteId = 5, CorrectAuthorId = 2, FalseAuthor1Id = 6, FalseAuthor2Id = 6 },
-                new Question { Id = 6, QuoteId = 6, CorrectAuthorId = 2, FalseAuthor1Id = 5, FalseAuthor2Id = 4 },
-                new Question { Id = 7, QuoteId = 7, CorrectAuthorId = 3, FalseAuthor1Id = 4, FalseAuthor2Id = 3 },
-                new Question { Id = 8, QuoteId = 8, CorrectAuthorId = 3, FalseAuthor1Id = 2, FalseAuthor2Id = 1 },
-                new Question { Id = 9, QuoteId = 9, CorrectAuthorId = 3, FalseAuthor1Id = 1, FalseAuthor2Id = 2 }
+                new Question { Id = 1, QuoteId = 1, CorrectAuthorId = 1, FalseAuthor1Id = 2, FalseAuthor2Id = 3, OptionAuthorId = 2 },
+                new Question { Id = 2, QuoteId = 2, CorrectAuthorId = 1, FalseAuthor1Id = 3, FalseAuthor2Id = 4, OptionAuthorId = 3},
+                new Question { Id = 3, QuoteId = 3, CorrectAuthorId = 1, FalseAuthor1Id = 4, FalseAuthor2Id = 5, OptionAuthorId = 4 },
+                new Question { Id = 4, QuoteId = 4, CorrectAuthorId = 2, FalseAuthor1Id = 5, FalseAuthor2Id = 6, OptionAuthorId = 5 },
+                new Question { Id = 5, QuoteId = 5, CorrectAuthorId = 2, FalseAuthor1Id = 6, FalseAuthor2Id = 5, OptionAuthorId = 6 },
+                new Question { Id = 6, QuoteId = 6, CorrectAuthorId = 2, FalseAuthor1Id = 5, FalseAuthor2Id = 4, OptionAuthorId = 5},
+                new Question { Id = 7, QuoteId = 7, CorrectAuthorId = 3, FalseAuthor1Id = 4, FalseAuthor2Id = 3, OptionAuthorId = 4},
+                new Question { Id = 8, QuoteId = 8, CorrectAuthorId = 3, FalseAuthor1Id = 2, FalseAuthor2Id = 1, OptionAuthorId = 2},
+                new Question { Id = 9, QuoteId = 9, CorrectAuthorId = 3, FalseAuthor1Id = 1, FalseAuthor2Id = 2, OptionAuthorId = 1 }
              );
         }
 

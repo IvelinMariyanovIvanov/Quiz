@@ -31,6 +31,10 @@ namespace Quiz.Models.Entities
         [ForeignKey(nameof(CorrectAuthorId))]
         public Author CorrectAuthor { get; set; }
         public int CorrectAuthorId { get; set; }
-        
+
+        [ForeignKey(nameof(OptionAuthorId))]
+        public Author OptionAuthor { get; set; }
+        public int OptionAuthorId { get; set; }
+
     }
 }

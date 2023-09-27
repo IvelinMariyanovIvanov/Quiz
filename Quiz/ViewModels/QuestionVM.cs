@@ -8,8 +8,11 @@ namespace Quiz.Web.ViewModels
 
         public int Id { get; set; }
 
-        public int RandomAuthorId { get; set; }
-        public Author RandomAuthor { get; set; } = new Author();
+        /// <summary>
+        /// Option Author for yes or no
+        /// </summary>
+        public int OptionAuthorId { get; set; }
+        public Author OptionAuthor { get; set; } = new Author();
 
         public QuestionType QuestionType { get; set; }
 

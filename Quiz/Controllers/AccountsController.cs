@@ -37,7 +37,7 @@ namespace Quiz.Web.Controllers
             List<User> users = await _unitOfWork.UserRepository.GetAllAsync(includeTables: "AnswerUsers");
 
             // do not show user with no Achievements
-            users = users.Where(u => u.AnswerUsers.Count() > 1).ToList();
+            users = users.Where(u => u.AnswerUsers.Count() > 0).ToList();
 
             return Json(new { data = users});
         }
