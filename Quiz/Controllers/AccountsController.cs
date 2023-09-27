@@ -9,7 +9,7 @@ using System.Data.Entity;
 
 namespace Quiz.Web.Controllers
 {
-    [Authorize(Roles = Constants.AdminRole)]
+    
     public class AccountsController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -23,13 +23,15 @@ namespace Quiz.Web.Controllers
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
         }
-       
+
+        [Authorize(Roles = Constants.AdminRole)]
         public IActionResult Users()
         {
             return View();
         }
 
         [HttpGet]
+        [Authorize(Roles = Constants.AdminRole)]
         public async Task<IActionResult> GetAllUsersAPI()
         {
             List<User> users =
@@ -38,20 +40,21 @@ namespace Quiz.Web.Controllers
             return Json(new { data = users });
         }
 
+        [Authorize(Roles = Constants.AdminRole)]
         public IActionResult UserAchievements(string userId)
         {
-            return View();
+            List<UserAnswers> userAnswers =  _unitOfWork.AnswerUserRepository
+              .GetAllWithLinqAsyncAsIQueryable
+              (u => u.UserId == userId, includeTables: "User,Answer,Answer.Quote,Answer.Question.CorrectAuthor").ToList();
+
+            return View(userAnswers);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUserAchievementsAPI(string userId)
-        {
-            List<UserAnswers> userAnswers =  await _unitOfWork.AnswerUserRepository
-                .GetAllWithLinqAsyncAsIQueryable
-                (u => u.UserId == userId, includeTables: "User,Answer").ToListAsync();
-
-            return Json(new { data = userAnswers });
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetUserAchievementsAPI(string userId)
+        //{
+        //    return null;
+        //}
 
         public IActionResult LogIn()
         {

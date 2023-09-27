@@ -25,8 +25,6 @@ namespace Quiz.Models.Entities
         public Author AnswerAuthor { get; set; }
         public int AnswerId { get; set; }
 
-        //public ICollection<User> Users { get; set; } = new List<User>();
-
         public ICollection<UserAnswers> AnswerUsers { get; set; }
     }
 }

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<UserAnswers>
+
+@{
+    ViewData["Title"] = "User Achievementes";
+}
+
+<div class="container justify-content-center col-md-8">
+    <div class="row mb-2">
+        <div class="col-6">
+            <h2 class="text-primary">User Achievements</h2>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped" width="100%" id="usersAchievementsTable">
+        <thead>
+            <tr>
+                <th class="col-1 text-center">
+                    <h4>Quote</h4>
+                </th>
+                <th class="col-1 text-center">
+                    <h4>Correct Answer</h4>
+                </th>
+                <th class="col-1 text-center">
+                    <h4>Answer</h4>
+                </th>
+                <th class="col-1">
+                    <h4>Is Correct</h4>
+                </th>
+                <th class="col-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (UserAnswers userAnswer in Model)
+            {
+                <tr>
+                    <td class="align-middle">
+                        @Html.DisplayFor(a => userAnswer.Answer.Quote.Text)
+                    </td>
+                    <td class="align-middle">
+                        @Html.DisplayFor(a => userAnswer.Answer.Question.CorrectAuthor.Name)
+                    </td>
+                    <td class="align-middle">
+                        @Html.DisplayFor(a => userAnswer.Answer.AnswerText)
+                    </td>
+                    <td class="align-middle">
+                        @Html.DisplayFor(a => userAnswer.Answer.IsCorrect)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script src="~/js/users.js"></script>
+}
+

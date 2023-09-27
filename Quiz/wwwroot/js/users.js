@@ -5,7 +5,7 @@ $(document).ready(function () {
 });
 
 function createUsersTable() {
-    dataTable = $('#userAchievementsTable').DataTable({
+    dataTable = $('#usersTable').DataTable({
         ajax: {
             url: '/Accounts/GetAllUsersAPI'
         },

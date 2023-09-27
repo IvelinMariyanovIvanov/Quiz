@@ -118,7 +118,7 @@ namespace Quiz.Web.Controllers
 
                 return View(form);
             }
-            catch
+            catch(Exception ex)
             {
                 TempData["error"] = "Can not answer the question";
 
@@ -150,12 +150,13 @@ namespace Quiz.Web.Controllers
         [NonAction]
         private void SetMultipleAnswer(QuestionVM form, int selectedAuthortId, Answer answer, List<Author> allAuthors)
         {
-            Author author = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
+            Author correctAhor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
+            Author falseauthor = allAuthors.SingleOrDefault(a => a.Id == selectedAuthortId);
 
             if (selectedAuthortId == form.CorrectAuthorId)
             {
                 answer.IsCorrect = true;
-                answer.AnswerText = author.Name;
+                answer.AnswerText = correctAhor.Name;
                 answer.AnswerId = form.CorrectAuthorId;
 
                 TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
@@ -163,8 +164,8 @@ namespace Quiz.Web.Controllers
             else
             {
                 answer.IsCorrect = false;
-                answer.AnswerText = author.Name;
-                answer.AnswerId = form.CorrectAuthorId;
+                answer.AnswerText = falseauthor.Name;
+                answer.AnswerId = selectedAuthortId;
 
                 TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
             }
@@ -174,6 +175,7 @@ namespace Quiz.Web.Controllers
         private async Task SetYesOrNoAnswer(QuestionVM form, string answerValue, Answer answer, List<Author> allAuthors)
         {
             Author correctAuthor = allAuthors.SingleOrDefault(a => a.Id == form.CorrectAuthorId);
+            Author falseAuthor = allAuthors.SingleOrDefault(a => a.Id == form.RandomAuthorId);
 
             if (answerValue == "yes" && form.RandomAuthorId == form.CorrectAuthorId)
             {
@@ -181,15 +183,15 @@ namespace Quiz.Web.Controllers
                 answer.AnswerText = correctAuthor.Name;
                 answer.AnswerId = form.CorrectAuthorId;
 
-                TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
+                TempData["success"] = $"Correct! The right answer is: {correctAuthor.Name}";
             }
             else if (answerValue == "yes" && form.RandomAuthorId != form.CorrectAuthorId)
             {
                 answer.IsCorrect = false;
-                answer.AnswerText = correctAuthor.Name;
+                answer.AnswerText = falseAuthor.Name;
                 answer.AnswerId = form.RandomAuthorId;
 
-                TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
+                TempData["error"] = $"Sorry, you are wrong! The right answer is: {correctAuthor.Name}";
             }
             else if (answerValue == "no" && form.RandomAuthorId != form.CorrectAuthorId)
             {
@@ -197,7 +199,7 @@ namespace Quiz.Web.Controllers
                 answer.AnswerText = correctAuthor.Name;
                 answer.AnswerId = form.CorrectAuthorId;
 
-                TempData["success"] = $"Correct! The right answer is: {answer.AnswerText}";
+                TempData["success"] = $"Correct! The right answer is: {correctAuthor.Name}";
             }
             else if (answerValue == "no" && form.RandomAuthorId == form.CorrectAuthorId)
             {
@@ -207,7 +209,7 @@ namespace Quiz.Web.Controllers
                 answer.AnswerText = author.Name;
                 answer.AnswerId = form.RandomAuthorId;
 
-                TempData["error"] = $"Sorry, you are wrong! The right answer is: {answer.AnswerText}";
+                TempData["error"] = $"Sorry, you are wrong! The right answer is: {correctAuthor.Name}";
             }
         }
     }
