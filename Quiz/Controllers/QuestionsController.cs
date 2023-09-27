@@ -9,9 +9,6 @@ using UserAnswers = Quiz.Models.Entities.UserAnswers;
 
 namespace Quiz.Web.Controllers
 {
-    /// <summary>
-    /// Questions
-    /// </summary>
     public class QuestionsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;      

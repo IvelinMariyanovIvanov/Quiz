@@ -11,6 +11,7 @@ namespace Quiz.Helpers
 
         public const string CompleteRegister = "CompleteRegister";
         public const string Questions = "Questions";
+        public const string UsersGrid = "UsersGrid";
 
         public enum QuestionType
         {
