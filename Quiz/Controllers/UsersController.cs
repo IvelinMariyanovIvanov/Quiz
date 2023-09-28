@@ -97,5 +97,28 @@ namespace Quiz.Web.Controllers
 
             return Json(new { success = true, message = $"The user with name {user.FullName} is deleted" });
         }
+
+        [HttpPost]
+        public async Task <IActionResult> LockOrUnlockUser([FromBody] string userId)
+        {
+            if (userId == null)
+                return Json(new { success = false, message = "The user does not exists" });
+
+            User user = await _unitOfWork.UserRepository.GetEntityAsync(u => u.Id == userId);
+
+            if (user == null)
+                return Json(new { success = false, message = "The user does not exists" });
+
+            // if the user is locked, unlocked him
+            if (user.LockoutEnd != null && user.LockoutEnd > DateTime.UtcNow)
+                user.LockoutEnd = DateTime.UtcNow;
+            else
+                user.LockoutEnd = DateTime.UtcNow.AddMinutes(2);
+
+            await _unitOfWork.SaveAsync();
+
+            return Json(new { success = true, message = "The user is locked or unlocked" });
+
+        }
     }
 }
