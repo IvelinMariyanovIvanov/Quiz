@@ -91,7 +91,7 @@ function DeleteUser(url) {
 function LockOrUnlockUser(id) {
     $.ajax({
         method: "POST",
-        url: '/Users/LockOrUnlockUser',
+        url: '/Users/LockOrUnlockUserAPI',
         data: JSON.stringify(id),
         contentType: "application/json",
         success: function (data) {

@@ -99,7 +99,7 @@ namespace Quiz.Web.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> LockOrUnlockUser([FromBody] string userId)
+        public async Task <IActionResult> LockOrUnlockUserAPI([FromBody] string userId)
         {
             if (userId == null)
                 return Json(new { success = false, message = "The user does not exists" });
