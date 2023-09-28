@@ -14,13 +14,7 @@ namespace Quiz.Models.Entities
         public string Text { get; set; }
 
         [ForeignKey(nameof(AuthorId))]
-        //[NotMapped]
         public Author Author { get; set; }
         public int AuthorId { get;set; }
-
-        //[ForeignKey(nameof(QuestionId))]
-        //[NotMapped]
-        //public Question Question { get; set; }
-        //public int QuestionId { get; set; }
     }
 }
