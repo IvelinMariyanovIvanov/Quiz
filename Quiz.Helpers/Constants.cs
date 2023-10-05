@@ -13,6 +13,8 @@ namespace Quiz.Helpers
         public const string Questions = "Questions";
         public const string UsersGrid = "UsersGrid";
 
+        public const int DefaultPageSize = 5;
+
         public enum QuestionType
         {
             /// <summary>

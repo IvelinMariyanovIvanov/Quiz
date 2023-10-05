@@ -6,6 +6,7 @@ using Quiz.Helpers;
 using Quiz.Models.Entities;
 using Quiz.Web.ViewModels;
 using System.Data.Entity;
+using X.PagedList;
 
 namespace Quiz.Web.Controllers
 {
@@ -43,13 +44,21 @@ namespace Quiz.Web.Controllers
         }
 
         [Authorize(Roles = Constants.AdminRole)]
-        public IActionResult UserAchievements(string userId)
+        public  async Task<IActionResult> UserAchievements(string userId, int page = 1)
         {
-            List<UserAnswers> userAnswers =  _unitOfWork.AnswerUserRepository
-              .GetAllWithLinqAsyncAsIQueryable
-              (u => u.UserId == userId, includeTables: "User,Answer,Answer.Quote,Answer.Question.CorrectAuthor").ToList();
+            if (page == 0 && page < 1)
+                page = 1;
 
-            if(userAnswers.Count() == 0)
+            var pageSize = Constants.DefaultPageSize;
+
+            IPagedList<UserAnswers> userAnswers = await _unitOfWork.AnswerUserRepository
+                .GetAllWithLinqAsyncAsIQueryable
+                  (u => u.UserId == userId,
+                  includeTables: "User,Answer,Answer.Quote,Answer.Question.CorrectAuthor")
+                    //.ToPagedList(page ?? 1, pageSize);
+                    .ToPagedListAsync(page, pageSize);
+
+            if (userAnswers.Count() == 0)
             {
                 TempData["error"] = $"There are no Achievements for that user";
                 return RedirectToAction(nameof(Users));

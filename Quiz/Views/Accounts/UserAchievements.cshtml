@@ -1,4 +1,8 @@
-﻿@model IEnumerable<UserAnswers>
+﻿@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+
+@model IPagedList<UserAnswers>
 
 @{
     ViewData["Title"] = "User Achievementes";
@@ -46,6 +50,22 @@
             }
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <nav>
+        @Html.PagedListPager(Model, page => Url.Action("UserAchievements", new { userId = Model[0].UserId, page = page }), new PagedListRenderOptions()
+        {
+        ActiveLiElementClass = "active",
+        PageClasses = new[]{ "page-link"},
+        LiElementClasses=new[] { "page-item" },
+        UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+        LinkToNextPageFormat = "Next",
+        LinkToPreviousPageFormat = "Previous",
+        MaximumPageNumbersToDisplay = 5,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always
+        })
+    </nav>
 </div>
 
 @section Scripts{
