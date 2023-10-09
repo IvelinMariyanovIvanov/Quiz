@@ -13,11 +13,18 @@
         <h2 class="text-primary text-center">User Achievements</h2>
     </div>
 
-    <table class="table table-bordered table-striped" width="100%" id="usersAchievementsTable">
+    <table class="table table-bordered table-striped mt-2" width="100%" id="usersAchievementsTable">
         <thead>
             <tr>
                 <th class="col-6 text-center">
-                    <h4>Quote</h4>
+                    @*<h4>Quote</h4>*@
+                    <h4>
+                        <a asp-action="UserAchievements"
+                           asp-route-userId="@Model[0].UserId"
+                           asp-route-sortOrder="@ViewData["QuoteSortParm"]">
+                            Quote
+                        </a>
+                    </h4>
                 </th>
                 <th class="col-1 text-center">
                     <h4>Correct Answer</h4>
@@ -26,7 +33,14 @@
                     <h4>Answer</h4>
                 </th>
                 <th class="col-1">
-                    <h4>Is Correct</h4>
+                    @*<h4>Is Correct</h4>*@
+                    <h4>
+                        <a asp-action="UserAchievements" 
+                            asp-route-userId="@Model[0].UserId" 
+                            asp-route-sortOrder="@ViewData["IsCorrectSortParm"]">
+                            Is Correct
+                        </a>
+                    </h4>
                 </th>
             </tr>
         </thead>

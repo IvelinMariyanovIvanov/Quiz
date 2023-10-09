@@ -44,19 +44,22 @@ namespace Quiz.Web.Controllers
         }
 
         [Authorize(Roles = Constants.AdminRole)]
-        public  async Task<IActionResult> UserAchievements(string userId, int page = 1)
+        public async Task<IActionResult> UserAchievements(string userId, string sortOrder, int page = 1)
         {
             if (page == 0 && page < 1)
                 page = 1;
 
+            ViewData["QuoteSortParm"] = String.IsNullOrEmpty(sortOrder) ? "quote_desc" : "";
+            ViewData["IsCorrectSortParm"] = sortOrder == "isCorrect" ? "isCorrect_desc" : "isCorrect";
+
             var pageSize = Constants.DefaultPageSize;
 
-            IPagedList<UserAnswers> userAnswers = await _unitOfWork.AnswerUserRepository
+            IQueryable<UserAnswers> userAnswers = _unitOfWork.AnswerUserRepository
                 .GetAllWithLinqAsyncAsIQueryable
                   (u => u.UserId == userId,
-                  includeTables: "User,Answer,Answer.Quote,Answer.Question.CorrectAuthor")
+                  includeTables: "User,Answer,Answer.Quote,Answer.Question.CorrectAuthor");
                     //.ToPagedList(page ?? 1, pageSize);
-                    .ToPagedListAsync(page, pageSize);
+                    //.ToPagedListAsync(page, pageSize);
 
             if (userAnswers.Count() == 0)
             {
@@ -64,7 +67,24 @@ namespace Quiz.Web.Controllers
                 return RedirectToAction(nameof(Users));
             }
 
-            return View(userAnswers);
+            switch (sortOrder)
+            {
+                case "quote_desc":
+                    userAnswers = userAnswers.OrderByDescending(a => a.Answer.Quote.Text);
+                    break;
+                case "isCorrect":
+                    userAnswers = userAnswers.OrderBy(a => a.Answer.IsCorrect);
+                    break;
+                case "isCorrect_desc":
+                    userAnswers = userAnswers.OrderByDescending(a => a.Answer.IsCorrect);
+                    break;
+                default:
+                    userAnswers = userAnswers.OrderBy(a => a.Answer.Quote.Text);
+                    break;
+            }
+
+            //return View(userAnswers);
+            return View(userAnswers.ToPagedListAsync(page, pageSize).GetAwaiter().GetResult());
         }
 
         public IActionResult LogIn()
