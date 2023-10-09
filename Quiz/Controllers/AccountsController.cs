@@ -84,7 +84,7 @@ namespace Quiz.Web.Controllers
             }
 
             //return View(userAnswers);
-            return View(userAnswers.ToPagedListAsync(page, pageSize).GetAwaiter().GetResult());
+            return View(await userAnswers.ToPagedListAsync(page, pageSize));
         }
 
         public IActionResult LogIn()
